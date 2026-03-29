@@ -1,0 +1,14 @@
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.DS_Store
+*.pyc
+*.pyo
+*.pyd
+.coverage
+dist/
+build/
+logs/traces/*.json
+outputs/patches/*.py
+!logs/traces/example_trace_name_error.json
+!outputs/patches/example_fixed_name_error.py

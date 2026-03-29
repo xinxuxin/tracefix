@@ -1,0 +1,75 @@
+{
+  "session_id": "20260329T194355867578Z",
+  "target_file": "cases/name_error_bug.py",
+  "max_attempts": 2,
+  "timeout_seconds": 2,
+  "status": "fixed",
+  "started_at": "2026-03-29T19:43:55Z",
+  "original_execution": {
+    "command": [
+      "/Library/Developer/CommandLineTools/usr/bin/python3",
+      "-I",
+      "-B",
+      "name_error_bug.py"
+    ],
+    "return_code": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"/private/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_skgjr88p/name_error_bug.py\", line 6, in <module>\n    greet(\"TraceFix\")\n  File \"/private/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_skgjr88p/name_error_bug.py\", line 3, in greet\n    print(message)\nNameError: name 'message' is not defined\n",
+    "timed_out": false,
+    "duration_ms": 45,
+    "exception_type": "NameError",
+    "exception_message": "name 'message' is not defined",
+    "failure_line": 3
+  },
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "diagnosis": {
+        "supported": true,
+        "bug_class": "name_error_typo",
+        "summary": "The undefined name closely matches an existing assigned variable.",
+        "evidence": [
+          "Undefined name: message",
+          "Closest assigned name: messgae"
+        ],
+        "confidence": 0.88,
+        "line_number": null,
+        "target_name": "message",
+        "replacement_name": "messgae",
+        "stop_reason": null
+      },
+      "patch_candidate": {
+        "strategy": "rename_undefined_name_to_close_match",
+        "rationale": "The undefined runtime name is replaced with the closest assigned variable name.",
+        "patched_source": "def greet(name):\n    messgae = f\"Hello, {name}!\"\n    print(messgae)\n\n\ngreet(\"TraceFix\")\n\n",
+        "changed_lines": [
+          3
+        ]
+      },
+      "verification": {
+        "success": true,
+        "summary": "The patched script executed successfully.",
+        "failure_kind": "resolved",
+        "execution_result": {
+          "command": [
+            "/Library/Developer/CommandLineTools/usr/bin/python3",
+            "-I",
+            "-B",
+            "name_error_bug.py"
+          ],
+          "return_code": 0,
+          "stdout": "Hello, TraceFix!\n",
+          "stderr": "",
+          "timed_out": false,
+          "duration_ms": 54,
+          "exception_type": null,
+          "exception_message": null,
+          "failure_line": null
+        }
+      }
+    }
+  ],
+  "final_message": "TraceFix produced a verified patch candidate.",
+  "trace_path": "logs/traces/example_trace_name_error.json",
+  "saved_patch_path": "outputs/patches/example_fixed_name_error.py"
+}

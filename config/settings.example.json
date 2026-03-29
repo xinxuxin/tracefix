@@ -1,0 +1,8 @@
+{
+  "max_attempts": 2,
+  "timeout_seconds": 2,
+  "trace_dir": "logs/traces",
+  "patch_dir": "outputs/patches",
+  "log_dir": "logs",
+  "evaluation_dir": "evaluation"
+}
