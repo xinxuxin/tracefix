@@ -3,8 +3,8 @@ from __future__ import annotations
 from dataclasses import asdict
 from dataclasses import dataclass
 from dataclasses import field
-from typing import Any
 from pathlib import Path
+from typing import Any
 
 
 @dataclass
@@ -131,6 +131,120 @@ class ExecutionRequest:
         default_factory=lambda: SessionMetadata(session_id="adhoc-execution")
     )
     execution_config: ExecutionConfig = field(default_factory=ExecutionConfig)
+
+
+@dataclass
+class CodeRegion:
+    """Localized code region referenced by the diagnoser."""
+
+    start_line: int | None = None
+    end_line: int | None = None
+    snippet: str = ""
+
+
+@dataclass
+class AlternativeHypothesis:
+    """Optional alternative explanation when evidence is not fully decisive."""
+
+    bug_class: str
+    reason: str
+    confidence_band: str
+
+
+@dataclass
+class DiagnoserRequest:
+    """Input contract for the diagnoser component."""
+
+    code: str
+    latest_execution_result: ExecutionResult
+    user_intent: str | None = None
+    expected_output: str | None = None
+    prior_patch_history: list[str] = field(default_factory=list)
+    prior_verifier_feedback: list[str] = field(default_factory=list)
+    session_state_summary: str = ""
+
+
+@dataclass
+class DiagnoserResult:
+    """Structured diagnosis handed off to the patcher/controller."""
+
+    primary_bug_class: str
+    likely_root_cause: str
+    localized_code_region: CodeRegion
+    evidence_summary: list[str]
+    recommended_repair_direction: str
+    confidence_score: float
+    confidence_band: str
+    uncertainty_notes: str
+    alternative_hypotheses: list[AlternativeHypothesis] = field(default_factory=list)
+    direct_cause: str | None = None
+    downstream_symptom: str | None = None
+    repair_hints: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class PatchChangedRegion:
+    """A localized before/after region touched by the patcher."""
+
+    start_line: int
+    end_line: int
+    original_snippet: str
+    updated_snippet: str
+
+
+@dataclass
+class PatcherRequest:
+    """Input contract for the patcher component."""
+
+    code: str
+    diagnosis_result: DiagnoserResult
+    user_intent: str | None = None
+    prior_patch_history: list[str] = field(default_factory=list)
+    verifier_feedback: list[str] = field(default_factory=list)
+
+
+@dataclass
+class PatcherResult:
+    """Structured patch synthesis result."""
+
+    updated_code: str
+    patch_diff: str
+    changed_regions: list[PatchChangedRegion]
+    patch_summary: str
+    intended_effect: str
+    minimality_flag: str
+    confidence_score: float
+    refusal_reason: str | None = None
+    strategy_id: str | None = None
+
+
+@dataclass
+class VerifierRequest:
+    """Input contract for the verifier component."""
+
+    original_code: str
+    patched_code: str
+    original_execution_result: ExecutionResult
+    rerun_execution_result: ExecutionResult
+    expected_output: str | None = None
+    simple_test_spec: SimpleTestSpec | None = None
+    diagnosis_result: DiagnoserResult | None = None
+    patch_result: PatcherResult | None = None
+    retry_count: int = 0
+    max_retries: int = 2
+
+
+@dataclass
+class VerifierResult:
+    """Structured decision from the verifier."""
+
+    decision: str
+    rationale: str
+    regression_flags: list[str]
+    behavior_match_status: str
+    original_failure_resolved: bool
+    uncertainty_notes: str
+    targeted_feedback_for_retry: list[str] = field(default_factory=list)
 
 
 def to_dict(value: Any) -> Any:
