@@ -6,11 +6,14 @@ export default {
     extend: {
       colors: {
         ink: "#0f172a",
-        mist: "#eef2ff",
+        mist: "#eef4ff",
         panel: "#ffffff",
-        accent: "#0f766e",
-        warning: "#b45309",
-        danger: "#b91c1c",
+        line: "#e2e8f0",
+        accent: "#0891b2",
+        signal: "#4f46e5",
+        success: "#059669",
+        warning: "#d97706",
+        danger: "#dc2626",
       },
       fontFamily: {
         sans: ['"IBM Plex Sans"', '"Avenir Next"', '"Segoe UI"', "sans-serif"],
@@ -18,11 +21,11 @@ export default {
         mono: ['"IBM Plex Mono"', '"SFMono-Regular"', "monospace"],
       },
       boxShadow: {
-        panel: "0 18px 50px rgba(15, 23, 42, 0.08)",
+        panel: "0 20px 48px rgba(15, 23, 42, 0.08)",
       },
       backgroundImage: {
-        "hero-wash":
-          "radial-gradient(circle at top left, rgba(15,118,110,0.18), transparent 38%), radial-gradient(circle at top right, rgba(180,83,9,0.16), transparent 36%)",
+        "hero-ink":
+          "radial-gradient(circle at top left, rgba(34,211,238,0.18), transparent 34%), radial-gradient(circle at top right, rgba(99,102,241,0.18), transparent 30%)",
       },
     },
   },

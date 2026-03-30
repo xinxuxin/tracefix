@@ -2,54 +2,86 @@
 
 ## Purpose
 
-The frontend is an optional local visualization layer for TraceFix. It exists to make the current repository easier to demo, easier to screenshot, and easier to explain in a course report. It is not a replacement for the CLI and it does not change the core debugging scope.
+The frontend is still an optional local visualization layer for TraceFix. It does not replace the CLI and it does not widen the debugging scope. Its purpose is to make the existing system easier to explain, easier to inspect, and easier to capture in screenshots or a short demo video.
 
-## What the Frontend Shows
+## What Changed in the Frontend Upgrade
 
-- project overview and scope reminder
-- debug workspace for pasted code or sample cases
-- animated pipeline view for Controller, Executor, Diagnoser, Patcher, and Verifier
-- trace timeline from `trace.jsonl`
-- patch diff and changed-region view
-- final verifier decision panel
-- sample case library
-- evaluation dashboard from existing CSV outputs
-- failure analysis highlights
-- session artifact paths and summaries
+The upgraded frontend keeps the same data flow and the same feature set, but improves:
 
-## Recommended 5-Minute Demo Flow
+- visual clarity and technical credibility
+- information hierarchy
+- demo sequencing
+- session storytelling
+- trace and diff readability
+- retry and artifact inspection
+- screenshot quality
 
-1. Start on the hero section and explain the target user and why TraceFix is agentic.
-2. Load `bug_case_02_name_error` as the quick happy-path example.
-3. Run TraceFix and pause on:
-   - the pipeline view
-   - the verifier result panel
-   - the patch diff
-4. Scroll to the trace timeline and show the explicit handoff events.
-5. Jump to the evaluation dashboard and show the full case set.
-6. End on the failure analysis cards for:
-   - `bug_case_06_failure_superficial_fix`
-   - `bug_case_07_failure_ambiguous_behavior`
+The style direction is now cooler, sharper, and more dashboard-like rather than painterly or decorative.
 
-## Best Screenshot Sequence
+## Best 5-Minute Demo Sequence
 
-1. Hero + architecture summary
-2. Debug workspace with a sample case loaded
-3. Pipeline view after a run
-4. Trace timeline with expanded handoff details
-5. Patch diff and verifier result together
-6. Evaluation dashboard
-7. Failure analysis section
-8. Session artifacts section showing saved paths
+1. Start on the top bar and hero section.
+   Explain that this is a visual layer on top of the existing bounded CLI workflow.
+2. Point to the hero system strip.
+   Use it to name the five core components: Controller, Executor, Diagnoser, Patcher, Verifier.
+3. Move to the Debug Workspace.
+   Load `bug_case_02_name_error` or `bug_case_04_missing_file`.
+4. Run TraceFix.
+   While it runs, keep the Pipeline View visible so the handoff progression is obvious.
+5. Pause on the Final Decision panel.
+   Explain why verifier authority matters.
+6. Open the Session Explorer.
+   Show:
+   - `Trace timeline` for handoffs
+   - `Patch diff` for the bounded edit
+   - `Artifacts` for saved report evidence
+7. Jump to the Evaluation Dashboard.
+   Show the summary cards and table.
+8. End on Failure Analysis.
+   Use `bug_case_06_failure_superficial_fix` and `bug_case_07_failure_ambiguous_behavior`.
 
-## Best Cases for the Frontend
+## Best Screenshot Sections
+
+Best architecture / system screenshots:
+
+- sticky top bar plus dark hero section
+- hero system strip
+- pipeline view with component status cards
+
+Best workflow / evidence screenshots:
+
+- debug workspace with a sample loaded
+- final decision panel
+- trace timeline with payload expanded
+- patch diff tab
+- artifacts tab with summary preview
+
+Best evaluation / report screenshots:
+
+- evaluation summary cards
+- evaluation results table
+- failure analysis cards
+
+## Best Interactions To Show
+
+- loading a sample case from the sample browser
+- running TraceFix from the workspace
+- switching Session Explorer tabs
+- filtering the trace timeline by component
+- switching between split code view and unified diff view
+- selecting an intermediate patch attempt
+- switching artifact preview modes
+
+These interactions make the frontend feel alive without changing backend behavior.
+
+## Best Cases To Use
 
 Best quick success demo:
 
 - `bug_case_02_name_error`
 - `bug_case_04_missing_file`
 
-Best governance demos:
+Best governance / limitation demos:
 
 - `bug_case_06_failure_superficial_fix`
 - `bug_case_07_failure_ambiguous_behavior`
@@ -58,15 +90,34 @@ Best conservative stop:
 
 - `bug_case_05_runtime_exception`
 
-## Architecture Mapping
+## Which Sections Explain What
 
-The frontend does not duplicate controller logic. Instead:
+Architecture explanation:
 
-- `TraceFixController` still runs the end-to-end workflow
-- `TraceFixVisualService` is only a thin adapter
-- the frontend reads:
-  - sample cases from `cases/`
-  - sessions from `outputs/sessions/`
-  - evaluation results from `evaluation/runs/`
+- hero section
+- top system strip
+- pipeline view
 
-That keeps the project course-appropriate while making the system much easier to inspect visually.
+Evidence explanation:
+
+- trace timeline
+- patch diff
+- artifacts preview
+
+Verifier and governance explanation:
+
+- final decision panel
+- failure analysis cards
+
+Evaluation explanation:
+
+- evaluation dashboard
+- outcome distribution
+- results table
+
+## Presentation Notes
+
+- Keep the app on a common laptop-sized viewport when recording.
+- Prefer one successful run and one failure-analysis jump instead of trying to show every panel in depth.
+- The new Session Explorer is the main detail surface, so it is a strong place to pause for screenshots.
+- The dark hero plus light detail panels produce the cleanest visual contrast in screenshots.
