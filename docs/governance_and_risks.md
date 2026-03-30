@@ -27,6 +27,7 @@ TraceFix includes several deliberate boundaries:
 - no arbitrary shell behavior beyond bounded Python invocation
 - timeout-based execution bounds
 - refusal and escalation when evidence is weak
+- local-first fallback when provider enhancement fails
 
 These boundaries reduce accidental scope expansion and make system behavior easier to justify in a course setting.
 
@@ -40,6 +41,7 @@ TraceFix reduces that risk by:
 - using expected output when available
 - escalating when behavior cannot be trusted automatically
 - stopping when retries are exhausted or patch evidence is weak
+- keeping the Verifier deterministic-first even when provider enhancement is enabled elsewhere
 
 ## Ambiguity Handling
 
@@ -51,6 +53,8 @@ Instead, it should:
 - avoid broad speculative edits
 - escalate rather than auto-accept
 
+If API enhancement is enabled, ambiguity handling should still preserve those rules. Provider output may help produce better diagnoses or patches, but it must not override scope limits or acceptance boundaries.
+
 This is especially important for cases where execution succeeds after patching but no reliable behavior oracle exists.
 
 ## Misuse Risks
@@ -61,6 +65,7 @@ Possible misuse or over-claim risks include:
 - assuming it can safely handle arbitrary user code
 - using it for multi-file or internet-dependent projects outside scope
 - over-trusting accepted patches without reviewing evidence
+- presenting optional provider enhancement as if it removed the need for evidence or review
 
 The documentation and evaluation package should make these limits explicit.
 
@@ -73,3 +78,15 @@ These exclusions are deliberate governance choices:
 - multi-file debugging would require broader repository reasoning, dependency tracking, and higher-risk patching
 
 By refusing those behaviors, TraceFix remains narrow, auditable, and aligned with its course-project goals.
+
+## Why API Enhancement Is Optional and Local Inspectability Still Matters
+
+TraceFix now supports optional provider-backed Diagnoser and Patcher behavior for better repair quality, but that enhancement is deliberately constrained:
+
+- local mode remains the default
+- provider-backed behavior is limited to single-file diagnosis and patch synthesis
+- the Controller, Executor, Verifier, traces, state, and evaluation remain local
+- provider failures fall back to local logic where configured
+- traces record provider name, model name, fallback usage, and provider errors
+
+This keeps the system course-appropriate. The project can still be run and evaluated without external services, while optional API mode can improve demos and repair quality when credentials are available.

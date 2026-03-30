@@ -4,5 +4,15 @@
   "trace_dir": "logs/traces",
   "patch_dir": "outputs/patches",
   "log_dir": "logs",
-  "evaluation_dir": "evaluation"
+  "evaluation_dir": "evaluation",
+  "provider_mode": "local",
+  "provider_model_name": null,
+  "openai_model_name": "gpt-4.1",
+  "anthropic_model_name": "claude-3-5-sonnet-latest",
+  "api_timeout_seconds": 20,
+  "api_max_tokens": 1200,
+  "enable_llm_diagnoser": false,
+  "enable_llm_patcher": false,
+  "enable_llm_verifier_assist": false,
+  "fallback_to_local_on_provider_error": true
 }

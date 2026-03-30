@@ -29,6 +29,7 @@ Return strict JSON with exactly these keys:
   "minimality_flag": "minimal|moderate|broad",
   "confidence_score": 0.0,
   "refusal_reason": null,
+  "strategy_id": "...",
   "assumptions": [
     "..."
   ]

@@ -1,6 +1,6 @@
 # TraceFix: A Multi-Agent Python Debugging System with Sandboxed Execution and Patch Verification
 
-TraceFix is a CLI-first course project that demonstrates a narrow, auditable agentic workflow for debugging single-file Python scripts. The system runs buggy code in bounded local execution, diagnoses the observed failure, synthesizes a conservative patch, reruns the patched script, and then verifies whether the result should be accepted, retried, escalated, or stopped. This repository now also includes an optional local visual frontend that sits on top of the existing controller and saved artifacts so reviewers can inspect handoffs, traces, patch diffs, verifier decisions, and evaluation outcomes without changing the underlying debugging scope.
+TraceFix is a CLI-first course project that demonstrates a narrow, auditable agentic workflow for debugging single-file Python scripts. The system runs buggy code in bounded local execution, diagnoses the observed failure, synthesizes a conservative patch, reruns the patched script, and then verifies whether the result should be accepted, retried, escalated, or stopped. The repository supports two operating styles: a fully local deterministic mode, and an optional API-enhanced mode where the Diagnoser and Patcher can call an external model provider while the Controller, Executor, Verifier, traces, evaluation, and artifacts all remain local and inspectable. This repository also includes an optional local visual frontend that sits on top of the existing controller and saved artifacts so reviewers can inspect handoffs, traces, patch diffs, verifier decisions, and evaluation outcomes without changing the underlying debugging scope.
 
 ## Target User
 
@@ -20,6 +20,8 @@ That separation makes the behavior easier to inspect, easier to evaluate, and sa
 
 The visual frontend does not replace this architecture. It is only a thin presentation layer over the same controller, session artifacts, and evaluation outputs.
 
+API enhancement also does not replace this architecture. It is an optional improvement path for the Diagnoser and Patcher only, with explicit fallback to local logic when credentials, SDKs, or provider responses are unavailable.
+
 ## Architecture Overview
 
 Core components:
@@ -30,12 +32,15 @@ Core components:
 - `Diagnoser`
   - Interprets execution evidence.
   - Produces a localized bug hypothesis, repair direction, confidence level, and uncertainty notes.
+  - Can run in local rules mode or optional provider-backed mode.
 - `Patcher`
   - Synthesizes the smallest reasonable patch from the diagnosis.
   - Produces updated code, diff, changed regions, and patch confidence.
+  - Can run in local template/rule mode or optional provider-backed mode.
 - `Verifier`
   - Compares original and rerun behavior.
   - Decides `accept`, `retry`, `escalate`, or `stop`.
+  - Remains rules-first and local, even when provider mode is enabled elsewhere.
 - `Controller`
   - Orchestrates the workflow, persists artifacts, and enforces bounded retries and stopping conditions.
 - `Visual API` (optional local adapter)
@@ -121,6 +126,13 @@ python -m pip install --upgrade pip
 python -m pip install -e .
 ```
 
+Optional API provider extras:
+
+```bash
+python -m pip install -e ".[openai]"
+python -m pip install -e ".[anthropic]"
+```
+
 Run tests:
 
 ```bash
@@ -136,6 +148,7 @@ More detailed commands are collected in [run_instructions.md](/Users/macbook/Des
 - The system is local-only and does not require external services.
 - Session artifacts are written per run so that traces are easy to inspect afterward.
 - The frontend is optional and local-only. It is intended for demos, screenshots, and walkthroughs, not as a replacement for the CLI.
+- API mode is optional. If no API key is configured, TraceFix still runs in local mode and does not crash.
 
 ## How To Run a Single Case
 
@@ -156,6 +169,66 @@ Run the demo script:
 ```bash
 PYTHONPATH=src python3 scripts/run_demo_case.py
 ```
+
+## How To Run in Local Mode
+
+Local mode is the default:
+
+```bash
+python -m tracefix debug cases/bug_case_02_name_error.py --expected-output-text "10.70"
+```
+
+In this mode, Diagnoser and Patcher use the existing deterministic logic and no external provider is required.
+
+## How To Run in OpenAI-Enhanced Mode
+
+Install the optional SDK and set credentials:
+
+```bash
+python -m pip install -e ".[openai]"
+export OPENAI_API_KEY=your_key_here
+export TRACEFIX_PROVIDER_MODE=openai
+export TRACEFIX_ENABLE_LLM_DIAGNOSER=1
+export TRACEFIX_ENABLE_LLM_PATCHER=1
+```
+
+Then run the same CLI flow:
+
+```bash
+python -m tracefix debug cases/bug_case_02_name_error.py --expected-output-text "10.70"
+```
+
+Default OpenAI model:
+
+- `gpt-4.1`
+
+You can override it with:
+
+```bash
+export TRACEFIX_PROVIDER_MODEL=gpt-4.1-mini
+```
+
+## How To Run in Anthropic-Enhanced Mode
+
+Install the optional SDK and set credentials:
+
+```bash
+python -m pip install -e ".[anthropic]"
+export ANTHROPIC_API_KEY=your_key_here
+export TRACEFIX_PROVIDER_MODE=anthropic
+export TRACEFIX_ENABLE_LLM_DIAGNOSER=1
+export TRACEFIX_ENABLE_LLM_PATCHER=1
+```
+
+Then run:
+
+```bash
+python -m tracefix debug cases/bug_case_04_missing_file.py --expected-output-text "Guest"
+```
+
+Default Anthropic model:
+
+- `claude-3-5-sonnet-latest`
 
 ## How To Run the Visual Frontend
 
@@ -225,6 +298,12 @@ Visual frontend:
 - reads the latest evaluation run from `evaluation/runs/`
 - does not replace or relocate those artifacts
 
+Provider traceability:
+
+- diagnoser and patcher results record whether they ran in `local`, `openai`, or `anthropic` mode
+- session artifacts record provider name, model name, fallback usage, and provider errors when fallback occurs
+- handoff traces include provider metadata for `diagnoser -> controller` and `patcher -> controller`
+
 Evaluation outputs:
 
 - run-level results under `evaluation/runs/<timestamp>/evaluation_results.csv`
@@ -244,6 +323,7 @@ TraceFix is intentionally narrow:
 - bounded retries with conservative stopping
 
 The optional frontend does not widen the debugging scope. It is only a local visualization and demo surface over the same single-file workflow.
+Optional API enhancement also does not widen the scope. It only changes how Diagnoser and Patcher generate their bounded outputs.
 
 ## Known Limitations
 
@@ -253,6 +333,7 @@ The optional frontend does not widen the debugging scope. It is only a local vis
 - TraceFix does not currently attempt broad logic repair or multi-file fixes.
 - Some successful reruns are escalated rather than accepted when the verifier lacks a strong behavior oracle.
 - The optional visual layer is optimized for local demos and screenshots, not for deployment or multi-user use.
+- API mode depends on optional SDK installation and environment variables; when those are missing or fail, the system falls back to local logic.
 
 ## Suggested Demo Cases
 

@@ -17,6 +17,13 @@ npm install
 cd ..
 ```
 
+Optional provider SDKs:
+
+```bash
+python -m pip install -e ".[openai]"
+python -m pip install -e ".[anthropic]"
+```
+
 ## Run One Case
 
 Name error case:
@@ -50,6 +57,39 @@ python -m tracefix debug cases/bug_case_01_syntax_error.py \
 ```bash
 PYTHONPATH=src python3 scripts/run_demo_case.py
 ```
+
+## Run in OpenAI-Enhanced Mode
+
+```bash
+export OPENAI_API_KEY=your_key_here
+export TRACEFIX_PROVIDER_MODE=openai
+export TRACEFIX_ENABLE_LLM_DIAGNOSER=1
+export TRACEFIX_ENABLE_LLM_PATCHER=1
+python -m tracefix debug cases/bug_case_02_name_error.py --expected-output-text "10.70"
+```
+
+Use a lighter model if needed:
+
+```bash
+export TRACEFIX_PROVIDER_MODEL=gpt-4.1-mini
+```
+
+## Run in Anthropic-Enhanced Mode
+
+```bash
+export ANTHROPIC_API_KEY=your_key_here
+export TRACEFIX_PROVIDER_MODE=anthropic
+export TRACEFIX_ENABLE_LLM_DIAGNOSER=1
+export TRACEFIX_ENABLE_LLM_PATCHER=1
+python -m tracefix debug cases/bug_case_04_missing_file.py --expected-output-text "Guest"
+```
+
+## Fallback Behavior
+
+- If provider mode is disabled, TraceFix stays fully local.
+- If provider mode is enabled but the API key is missing, the system falls back to local logic.
+- If the provider SDK is missing or the provider response fails, the system falls back to local logic when fallback is enabled.
+- Provider mode, model name, fallback usage, and provider errors are recorded in session artifacts and trace payloads.
 
 ## Run the Visual Frontend
 
@@ -129,6 +169,12 @@ Focused visual adapter test:
 
 ```bash
 PYTHONPATH=src python -m unittest tests.test_visual_api -v
+```
+
+Focused provider/fallback tests:
+
+```bash
+PYTHONPATH=src python -m unittest tests.test_provider_modes -v
 ```
 
 ## Output Locations

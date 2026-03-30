@@ -1,12 +1,19 @@
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
+from typing import Any
 
+from tracefix.config import TraceFixConfig
+from tracefix.providers.base import LLMProvider
+from tracefix.providers.base import ProviderError
+from tracefix.providers.factory import resolve_provider
 from tracefix.types import CodeRegion
 from tracefix.types import PatchChangedRegion
 from tracefix.types import PatcherRequest
 from tracefix.types import PatcherResult
+from tracefix.types import to_dict
 from tracefix.utils.diff_utils import compute_changed_regions
 from tracefix.utils.diff_utils import compute_unified_diff
 
@@ -14,12 +21,79 @@ from tracefix.utils.diff_utils import compute_unified_diff
 class PatcherAgent:
     """Synthesizes the smallest reasonable code edit from a diagnosis."""
 
-    def __init__(self, prompt_path: str | Path | None = None) -> None:
+    def __init__(
+        self,
+        prompt_path: str | Path | None = None,
+        *,
+        config: TraceFixConfig | None = None,
+        provider: LLMProvider | None = None,
+    ) -> None:
         self.prompt_path = Path(prompt_path) if prompt_path else (
             Path(__file__).resolve().parents[1] / "prompts" / "patcher_prompt.txt"
         )
+        self.config = config or TraceFixConfig.from_env()
+        self.provider = provider
 
     def patch(self, request: PatcherRequest) -> PatcherResult:
+        local_result = self._patch_local(request)
+        local_result = self._annotate_result(local_result, execution_mode="local")
+
+        if not self.config.enable_llm_patcher:
+            return local_result
+
+        resolution = resolve_provider(self.config, component_name="patcher")
+        active_provider = self.provider or resolution.provider
+        provider_name = self.provider.provider_name if self.provider is not None else resolution.provider_name
+        model_name = self.provider.model_name if self.provider is not None else resolution.model_name
+
+        if active_provider is None:
+            return self._annotate_result(
+                local_result,
+                execution_mode="local",
+                provider_name=provider_name,
+                model_name=model_name,
+                fallback_used=bool(provider_name or resolution.error),
+                provider_error=resolution.error,
+            )
+
+        try:
+            prompt = self.build_prompt(request)
+            generation = active_provider.generate_json(
+                prompt,
+                timeout_seconds=self.config.api_timeout_seconds,
+                max_tokens=self.config.api_max_tokens,
+            )
+            provider_result = self._coerce_provider_result(generation.payload, request, local_result)
+            if provider_result.refusal_reason and local_result.refusal_reason is None:
+                raise ProviderError(
+                    f"Provider returned a refusal while a safe local patch existed: {provider_result.refusal_reason}"
+                )
+            return self._annotate_result(
+                provider_result,
+                execution_mode=active_provider.provider_name,
+                provider_name=active_provider.provider_name,
+                model_name=active_provider.model_name,
+            )
+        except ProviderError as exc:
+            if not self.config.fallback_to_local_on_provider_error:
+                raise
+            return self._annotate_result(
+                local_result,
+                execution_mode="local",
+                provider_name=provider_name or getattr(active_provider, "provider_name", None),
+                model_name=model_name or getattr(active_provider, "model_name", None),
+                fallback_used=True,
+                provider_error=str(exc),
+            )
+
+    def build_prompt(self, request: PatcherRequest) -> str:
+        template = self.prompt_path.read_text(encoding="utf-8")
+        prompt_payload = {
+            "request": to_dict(request),
+        }
+        return template.replace("{{INPUT_JSON}}", json.dumps(prompt_payload, indent=2, ensure_ascii=False))
+
+    def _patch_local(self, request: PatcherRequest) -> PatcherResult:
         diagnosis = request.diagnosis_result
 
         if diagnosis.confidence_score < 0.45 and not diagnosis.repair_hints:
@@ -52,48 +126,111 @@ class PatcherAgent:
         if safeguard_failure is not None:
             return self._refusal(request, safeguard_failure)
 
-        patch_diff = compute_unified_diff(request.code, updated_code)
-        changed_regions = compute_changed_regions(request.code, updated_code)
+        return self._build_patch_result(
+            original_code=request.code,
+            updated_code=updated_code,
+            patch_summary="",
+            intended_effect=diagnosis.recommended_repair_direction,
+            confidence_score=max(0.2, diagnosis.confidence_score),
+            strategy_id=strategy_id,
+        )
+
+    def _coerce_provider_result(
+        self,
+        payload: dict[str, Any],
+        request: PatcherRequest,
+        local_result: PatcherResult,
+    ) -> PatcherResult:
+        refusal_reason = payload.get("refusal_reason")
+        if refusal_reason:
+            return self._refusal(request, str(refusal_reason))
+
+        updated_code = payload.get("updated_code")
+        if not isinstance(updated_code, str) or not updated_code.strip():
+            raise ProviderError("Provider patch output did not include usable updated_code.")
+
+        if updated_code == request.code:
+            raise ProviderError("Provider patch output returned unchanged code.")
+
+        safeguard_failure = self._run_safeguards(
+            request.code,
+            updated_code,
+            request.diagnosis_result.confidence_score,
+        )
+        if safeguard_failure is not None:
+            raise ProviderError(safeguard_failure)
+
+        strategy_id = str(payload.get("strategy_id") or local_result.strategy_id or "llm_patch")
+        patch_summary = str(
+            payload.get("patch_summary") or f"Applied {strategy_id} using a provider-suggested bounded patch."
+        )
+        intended_effect = str(
+            payload.get("intended_effect") or request.diagnosis_result.recommended_repair_direction
+        )
+        confidence_score = self._coerce_float(payload.get("confidence_score"), local_result.confidence_score)
+
+        return self._build_patch_result(
+            original_code=request.code,
+            updated_code=updated_code,
+            patch_summary=patch_summary,
+            intended_effect=intended_effect,
+            confidence_score=confidence_score,
+            strategy_id=strategy_id,
+        )
+
+    @staticmethod
+    def _annotate_result(
+        result: PatcherResult,
+        *,
+        execution_mode: str,
+        provider_name: str | None = None,
+        model_name: str | None = None,
+        fallback_used: bool = False,
+        provider_error: str | None = None,
+    ) -> PatcherResult:
+        result.execution_mode = execution_mode
+        result.provider_name = provider_name
+        result.model_name = model_name
+        result.fallback_used = fallback_used
+        result.provider_error = provider_error
+        return result
+
+    def _build_patch_result(
+        self,
+        *,
+        original_code: str,
+        updated_code: str,
+        patch_summary: str,
+        intended_effect: str,
+        confidence_score: float,
+        strategy_id: str,
+    ) -> PatcherResult:
+        patch_diff = compute_unified_diff(original_code, updated_code)
+        changed_regions = compute_changed_regions(original_code, updated_code)
         changed_line_count = sum((region.end_line - region.start_line + 1) for region in changed_regions)
-        total_lines = max(1, len(request.code.splitlines()))
+        total_lines = max(1, len(original_code.splitlines()))
         change_ratio = changed_line_count / total_lines
         minimality_flag = self._minimality_flag(changed_line_count, change_ratio)
-        confidence_score = max(
+        final_confidence = max(
             0.2,
-            diagnosis.confidence_score - (0.0 if minimality_flag == "minimal" else 0.1 if minimality_flag == "moderate" else 0.25),
+            confidence_score - (0.0 if minimality_flag == "minimal" else 0.1 if minimality_flag == "moderate" else 0.25),
         )
 
         return PatcherResult(
             updated_code=updated_code,
             patch_diff=patch_diff,
             changed_regions=changed_regions,
-            patch_summary=self._patch_summary(strategy_id, minimality_flag),
-            intended_effect=diagnosis.recommended_repair_direction,
+            patch_summary=(
+                patch_summary
+                if patch_summary and not patch_summary.startswith("Applied ")
+                else self._patch_summary(strategy_id, minimality_flag)
+            ),
+            intended_effect=intended_effect,
             minimality_flag=minimality_flag,
-            confidence_score=confidence_score,
+            confidence_score=final_confidence,
             refusal_reason=None,
             strategy_id=strategy_id,
         )
-
-    def build_prompt(self, request: PatcherRequest) -> str:
-        template = self.prompt_path.read_text(encoding="utf-8")
-        diagnosis = request.diagnosis_result
-        prompt_payload = {
-            "user_intent": request.user_intent,
-            "prior_patch_history": request.prior_patch_history,
-            "verifier_feedback": request.verifier_feedback,
-            "diagnosis_summary": {
-                "primary_bug_class": diagnosis.primary_bug_class,
-                "likely_root_cause": diagnosis.likely_root_cause,
-                "localized_code_region": diagnosis.localized_code_region,
-                "recommended_repair_direction": diagnosis.recommended_repair_direction,
-                "confidence_score": diagnosis.confidence_score,
-                "uncertainty_notes": diagnosis.uncertainty_notes,
-                "repair_hints": diagnosis.repair_hints,
-            },
-            "current_code": request.code,
-        }
-        return template.replace("{{INPUT_JSON}}", str(prompt_payload))
 
     def _select_strategy(self, diagnosis) -> str | None:
         hints = diagnosis.repair_hints
@@ -220,6 +357,8 @@ class PatcherAgent:
 
         changed_regions = compute_changed_regions(original_code, updated_code)
         changed_line_count = sum((region.end_line - region.start_line + 1) for region in changed_regions)
+        if changed_line_count == 0:
+            return "Patch output did not change the script."
         change_ratio = changed_line_count / original_line_count
         if change_ratio > 0.6 and diagnosis_confidence < 0.8:
             return "Patch would be too broad for the current diagnosis confidence."
@@ -237,8 +376,10 @@ class PatcherAgent:
         return "broad"
 
     @staticmethod
-    def _patch_summary(strategy_id: str, minimality_flag: str) -> str:
-        return f"Applied {strategy_id} using a {minimality_flag} localized patch."
+    def _patch_summary(strategy_id: str, minimality_flag: str | None) -> str:
+        if minimality_flag:
+            return f"Applied {strategy_id} using a {minimality_flag} localized patch."
+        return f"Applied {strategy_id} using a localized patch."
 
     @staticmethod
     def _failed_before(
@@ -262,3 +403,10 @@ class PatcherAgent:
             refusal_reason=reason,
             strategy_id=None,
         )
+
+    @staticmethod
+    def _coerce_float(value: Any, default: float) -> float:
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return default

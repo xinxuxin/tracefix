@@ -46,8 +46,8 @@ class TraceFixController:
         )
         self.config.ensure_directories()
         self.executor = ExecutorAgent()
-        self.diagnoser = DiagnoserAgent()
-        self.patcher = PatcherAgent()
+        self.diagnoser = DiagnoserAgent(config=self.config)
+        self.patcher = PatcherAgent(config=self.config)
         self.verifier = VerifierAgent()
         self.logger = TraceLogger(
             trace_dir=self.config.trace_dir,
@@ -330,7 +330,7 @@ class TraceFixController:
                 "failure_line": execution_result.failure_line,
             },
         )
-        return self.diagnoser.diagnose(
+        result = self.diagnoser.diagnose(
             DiagnoserRequest(
                 code=code,
                 latest_execution_result=execution_result,
@@ -341,6 +341,21 @@ class TraceFixController:
                 session_state_summary=f"attempt={attempt_index}; prior_patches={len(prior_patch_history)}",
             )
         )
+        self._handoff_event(
+            trace_events_path,
+            handoff="diagnoser -> controller",
+            attempt_index=attempt_index,
+            summary=f"Diagnoser completed in {result.execution_mode} mode.",
+            payload={
+                "execution_mode": result.execution_mode,
+                "provider_name": result.provider_name,
+                "model_name": result.model_name,
+                "fallback_used": result.fallback_used,
+                "provider_error": result.provider_error,
+                "primary_bug_class": result.primary_bug_class,
+            },
+        )
+        return result
 
     def _run_patcher(
         self,
@@ -363,7 +378,7 @@ class TraceFixController:
                 "confidence_score": diagnosis.confidence_score,
             },
         )
-        return self.patcher.patch(
+        result = self.patcher.patch(
             PatcherRequest(
                 code=code,
                 diagnosis_result=diagnosis,
@@ -372,6 +387,22 @@ class TraceFixController:
                 verifier_feedback=prior_verifier_feedback,
             )
         )
+        self._handoff_event(
+            trace_events_path,
+            handoff="patcher -> controller",
+            attempt_index=attempt_index,
+            summary=f"Patcher completed in {result.execution_mode} mode.",
+            payload={
+                "execution_mode": result.execution_mode,
+                "provider_name": result.provider_name,
+                "model_name": result.model_name,
+                "fallback_used": result.fallback_used,
+                "provider_error": result.provider_error,
+                "strategy_id": result.strategy_id,
+                "refusal_reason": result.refusal_reason,
+            },
+        )
+        return result
 
     def _run_verifier(
         self,
@@ -481,6 +512,11 @@ class TraceFixController:
                     f"- Bug class: `{diagnosis.primary_bug_class}`",
                     f"- Root cause hypothesis: {diagnosis.likely_root_cause}",
                     f"- Uncertainty: {diagnosis.uncertainty_notes}",
+                    f"- Execution mode: `{diagnosis.execution_mode}`",
+                    f"- Provider: `{diagnosis.provider_name or 'local_rules'}`",
+                    f"- Model: `{diagnosis.model_name or 'n/a'}`",
+                    f"- Fallback used: `{diagnosis.fallback_used}`",
+                    f"- Provider error: {diagnosis.provider_error or 'none'}",
                     "",
                 ]
             )
@@ -492,6 +528,11 @@ class TraceFixController:
                     f"- Patch summary: {patch_result.patch_summary}",
                     f"- Strategy: `{patch_result.strategy_id or 'none'}`",
                     f"- Refusal reason: {patch_result.refusal_reason or 'none'}",
+                    f"- Execution mode: `{patch_result.execution_mode}`",
+                    f"- Provider: `{patch_result.provider_name or 'local_rules'}`",
+                    f"- Model: `{patch_result.model_name or 'n/a'}`",
+                    f"- Fallback used: `{patch_result.fallback_used}`",
+                    f"- Provider error: {patch_result.provider_error or 'none'}",
                     "",
                 ]
             )
@@ -544,7 +585,9 @@ class TraceFixController:
                 lines.append(
                     f"- Attempt {detail['attempt_index']}: "
                     f"diagnosis=`{getattr(diagnosis, 'primary_bug_class', 'n/a')}`, "
+                    f"diagnosis_mode=`{getattr(diagnosis, 'execution_mode', 'local')}`, "
                     f"patch=`{getattr(patch_result, 'strategy_id', None) or 'refused'}`, "
+                    f"patch_mode=`{getattr(patch_result, 'execution_mode', 'local') if patch_result else 'n/a'}`, "
                     f"verifier=`{getattr(verifier_result, 'decision', 'not_run')}`"
                 )
         return "\n".join(lines) + "\n"

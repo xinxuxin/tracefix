@@ -180,6 +180,11 @@ class DiagnoserResult:
     direct_cause: str | None = None
     downstream_symptom: str | None = None
     repair_hints: dict[str, Any] = field(default_factory=dict)
+    execution_mode: str = "local"
+    provider_name: str | None = None
+    model_name: str | None = None
+    fallback_used: bool = False
+    provider_error: str | None = None
 
 
 @dataclass
@@ -216,6 +221,11 @@ class PatcherResult:
     confidence_score: float
     refusal_reason: str | None = None
     strategy_id: str | None = None
+    execution_mode: str = "local"
+    provider_name: str | None = None
+    model_name: str | None = None
+    fallback_used: bool = False
+    provider_error: str | None = None
 
 
 @dataclass

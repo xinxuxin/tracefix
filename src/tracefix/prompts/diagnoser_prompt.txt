@@ -7,6 +7,8 @@ Rules:
 - Do not assume hidden files, missing packages, or external system context unless the evidence directly shows it.
 - Distinguish the direct cause from any downstream symptom when possible.
 - Prefer a localized diagnosis over whole-program speculation.
+- Preserve the single-file scope and do not invent multi-file explanations.
+- If a likely typo or localized repair cue is visible, include it in `repair_hints`.
 - If evidence is insufficient, say so explicitly.
 - Do not patch code.
 - Do not execute code.
@@ -29,14 +31,23 @@ Return strict JSON with exactly these keys:
   "confidence_score": 0.0,
   "confidence_band": "low|medium|high",
   "uncertainty_notes": "...",
-  "why_this_may_still_be_uncertain": "...",
   "alternative_hypotheses": [
     {
       "bug_class": "...",
       "reason": "...",
       "confidence_band": "low|medium|high"
     }
-  ]
+  ],
+  "direct_cause": "...",
+  "downstream_symptom": "...",
+  "repair_hints": {
+    "line_number": 0,
+    "target_name": "...",
+    "replacement_name": "...",
+    "missing_colon": false,
+    "remove_call_arguments": false,
+    "missing_path": "..."
+  }
 }
 
 Input JSON:

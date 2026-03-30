@@ -6,7 +6,12 @@ import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
+from tracefix.config import TraceFixConfig
+from tracefix.providers.base import LLMProvider
+from tracefix.providers.base import ProviderError
+from tracefix.providers.factory import resolve_provider
 from tracefix.types import AlternativeHypothesis
 from tracefix.types import CodeRegion
 from tracefix.types import DiagnoserRequest
@@ -64,12 +69,73 @@ class DiagnoserAgent:
         "with ",
     )
 
-    def __init__(self, prompt_path: str | Path | None = None) -> None:
+    def __init__(
+        self,
+        prompt_path: str | Path | None = None,
+        *,
+        config: TraceFixConfig | None = None,
+        provider: LLMProvider | None = None,
+    ) -> None:
         self.prompt_path = Path(prompt_path) if prompt_path else (
             Path(__file__).resolve().parents[1] / "prompts" / "diagnoser_prompt.txt"
         )
+        self.config = config or TraceFixConfig.from_env()
+        self.provider = provider
 
     def diagnose(self, request: DiagnoserRequest) -> DiagnoserResult:
+        local_result = self._diagnose_local(request)
+        local_result = self._annotate_result(local_result, execution_mode="local")
+
+        if not self.config.enable_llm_diagnoser:
+            return local_result
+
+        resolution = resolve_provider(self.config, component_name="diagnoser")
+        active_provider = self.provider or resolution.provider
+        provider_name = self.provider.provider_name if self.provider is not None else resolution.provider_name
+        model_name = self.provider.model_name if self.provider is not None else resolution.model_name
+
+        if active_provider is None:
+            return self._annotate_result(
+                local_result,
+                execution_mode="local",
+                provider_name=provider_name,
+                model_name=model_name,
+                fallback_used=bool(provider_name or resolution.error),
+                provider_error=resolution.error,
+            )
+
+        try:
+            prompt = self.build_prompt(request)
+            generation = active_provider.generate_json(
+                prompt,
+                timeout_seconds=self.config.api_timeout_seconds,
+                max_tokens=self.config.api_max_tokens,
+            )
+            provider_result = self._coerce_provider_result(generation.payload, local_result)
+            return self._annotate_result(
+                provider_result,
+                execution_mode=active_provider.provider_name,
+                provider_name=active_provider.provider_name,
+                model_name=active_provider.model_name,
+            )
+        except ProviderError as exc:
+            if not self.config.fallback_to_local_on_provider_error:
+                raise
+            return self._annotate_result(
+                local_result,
+                execution_mode="local",
+                provider_name=provider_name or getattr(active_provider, "provider_name", None),
+                model_name=model_name or getattr(active_provider, "model_name", None),
+                fallback_used=True,
+                provider_error=str(exc),
+            )
+
+    def build_prompt(self, request: DiagnoserRequest) -> str:
+        template = self.prompt_path.read_text(encoding="utf-8")
+        payload = json.dumps(to_dict(request), indent=2, ensure_ascii=False)
+        return template.replace("{{INPUT_JSON}}", payload)
+
+    def _diagnose_local(self, request: DiagnoserRequest) -> DiagnoserResult:
         result = request.latest_execution_result
 
         if result.outcome_label == "syntax_error" or result.exception_type == "SyntaxError":
@@ -97,10 +163,62 @@ class DiagnoserAgent:
         diagnosis.alternative_hypotheses = diagnosis.alternative_hypotheses[:2]
         return diagnosis
 
-    def build_prompt(self, request: DiagnoserRequest) -> str:
-        template = self.prompt_path.read_text(encoding="utf-8")
-        payload = json.dumps(to_dict(request), indent=2, ensure_ascii=False)
-        return template.replace("{{INPUT_JSON}}", payload)
+    def _coerce_provider_result(
+        self,
+        payload: dict[str, Any],
+        local_result: DiagnoserResult,
+    ) -> DiagnoserResult:
+        region_payload = payload.get("localized_code_region") or {}
+        region = CodeRegion(
+            start_line=self._coerce_int(region_payload.get("start_line")) or local_result.localized_code_region.start_line,
+            end_line=self._coerce_int(region_payload.get("end_line")) or local_result.localized_code_region.end_line,
+            snippet=str(region_payload.get("snippet") or local_result.localized_code_region.snippet),
+        )
+
+        confidence_score = self._coerce_float(payload.get("confidence_score"), local_result.confidence_score)
+        confidence_band = str(payload.get("confidence_band") or self._confidence_band(confidence_score))
+        evidence = self._coerce_string_list(payload.get("evidence_summary")) or local_result.evidence_summary
+        alternatives = self._coerce_alternatives(payload.get("alternative_hypotheses"))
+
+        repair_hints = dict(local_result.repair_hints)
+        if isinstance(payload.get("repair_hints"), dict):
+            repair_hints.update(payload["repair_hints"])
+
+        return DiagnoserResult(
+            primary_bug_class=str(payload.get("primary_bug_class") or local_result.primary_bug_class),
+            likely_root_cause=str(payload.get("likely_root_cause") or local_result.likely_root_cause),
+            localized_code_region=region,
+            evidence_summary=evidence,
+            recommended_repair_direction=str(
+                payload.get("recommended_repair_direction") or local_result.recommended_repair_direction
+            ),
+            confidence_score=confidence_score,
+            confidence_band=confidence_band,
+            uncertainty_notes=str(payload.get("uncertainty_notes") or local_result.uncertainty_notes),
+            alternative_hypotheses=alternatives or local_result.alternative_hypotheses[:2],
+            direct_cause=str(payload.get("direct_cause") or local_result.direct_cause or ""),
+            downstream_symptom=str(
+                payload.get("downstream_symptom") or local_result.downstream_symptom or ""
+            ),
+            repair_hints=repair_hints,
+        )
+
+    @staticmethod
+    def _annotate_result(
+        result: DiagnoserResult,
+        *,
+        execution_mode: str,
+        provider_name: str | None = None,
+        model_name: str | None = None,
+        fallback_used: bool = False,
+        provider_error: str | None = None,
+    ) -> DiagnoserResult:
+        result.execution_mode = execution_mode
+        result.provider_name = provider_name
+        result.model_name = model_name
+        result.fallback_used = fallback_used
+        result.provider_error = provider_error
+        return result
 
     def _diagnose_syntax_error(self, request: DiagnoserRequest) -> DiagnoserResult:
         result = request.latest_execution_result
@@ -492,3 +610,40 @@ class DiagnoserAgent:
                 "Verifier feedback indicates earlier repair attempts did not fully resolve the issue, which lowers confidence in one-line explanations."
             )
         return " ".join(fragment for fragment in fragments if fragment).strip()
+
+    @staticmethod
+    def _coerce_string_list(value: Any) -> list[str]:
+        if not isinstance(value, list):
+            return []
+        return [str(item) for item in value if str(item).strip()]
+
+    @staticmethod
+    def _coerce_alternatives(value: Any) -> list[AlternativeHypothesis]:
+        if not isinstance(value, list):
+            return []
+        results: list[AlternativeHypothesis] = []
+        for item in value[:2]:
+            if not isinstance(item, dict):
+                continue
+            results.append(
+                AlternativeHypothesis(
+                    bug_class=str(item.get("bug_class", "unknown")),
+                    reason=str(item.get("reason", "")),
+                    confidence_band=str(item.get("confidence_band", "low")),
+                )
+            )
+        return results
+
+    @staticmethod
+    def _coerce_int(value: Any) -> int | None:
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return None
+
+    @staticmethod
+    def _coerce_float(value: Any, default: float) -> float:
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return default
