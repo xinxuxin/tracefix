@@ -285,11 +285,13 @@ class DiagnoserAgent:
         recommended = "Inspect the values and call signature at the localized line and align the argument types or count before patching more broadly."
         uncertainty = "TypeError evidence points to the failing operation, but the direct cause may be upstream data flow rather than the localized expression alone."
         alternatives: list[AlternativeHypothesis] = []
+        repair_hints: dict[str, object] = {"line_number": result.failure_line}
 
         if "positional argument" in message or "required positional argument" in message:
             confidence = 0.86
             likely_root_cause = "A function or callable is being invoked with the wrong number of arguments."
             recommended = "Match the call site to the function signature, or adjust the definition if the call is the intended behavior."
+            repair_hints["remove_call_arguments"] = True
             alternatives.append(
                 AlternativeHypothesis(
                     bug_class="runtime_exception",
@@ -338,7 +340,7 @@ class DiagnoserAgent:
             alternative_hypotheses=alternatives,
             direct_cause=result.exception_message,
             downstream_symptom="Execution failed when Python evaluated the localized runtime operation.",
-            repair_hints={"line_number": result.failure_line},
+            repair_hints=repair_hints,
         )
 
     def _diagnose_output_mismatch(self, request: DiagnoserRequest) -> DiagnoserResult:

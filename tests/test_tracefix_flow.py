@@ -39,7 +39,10 @@ class TraceFixFlowTests(unittest.TestCase):
             encoding="utf-8",
         )
 
-        state = self.controller.debug_file(script_path)
+        state = self.controller.debug_file(
+            script_path,
+            expected_output="Hello, TraceFix!\n",
+        )
 
         self.assertEqual(state.status, "fixed")
         self.assertIsNotNone(state.trace_path)
@@ -61,7 +64,10 @@ class TraceFixFlowTests(unittest.TestCase):
             encoding="utf-8",
         )
 
-        state = self.controller.debug_file(script_path)
+        state = self.controller.debug_file(
+            script_path,
+            expected_output="3\n2\n1\n",
+        )
 
         self.assertEqual(state.status, "fixed")
         saved_patch = Path(state.saved_patch_path)
@@ -76,8 +82,8 @@ class TraceFixFlowTests(unittest.TestCase):
 
         state = self.controller.debug_file(script_path)
 
-        self.assertEqual(state.status, "stopped_unsupported")
-        self.assertEqual(state.attempts[-1].diagnosis.stop_reason, "unsupported_failure")
+        self.assertEqual(state.status, "stopped_no_patch")
+        self.assertEqual(state.final_decision, "stop")
 
     def test_trace_file_contains_attempt_history(self) -> None:
         script_path = self.base / "name_error_bug.py"
@@ -91,7 +97,10 @@ class TraceFixFlowTests(unittest.TestCase):
             encoding="utf-8",
         )
 
-        state = self.controller.debug_file(script_path)
+        state = self.controller.debug_file(
+            script_path,
+            expected_output="Hello, TraceFix!\n",
+        )
         trace_payload = json.loads(Path(state.trace_path).read_text(encoding="utf-8"))
 
         self.assertEqual(trace_payload["status"], "fixed")
