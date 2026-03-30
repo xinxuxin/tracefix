@@ -5,6 +5,7 @@ from pathlib import Path
 
 from tracefix.config import TraceFixConfig
 from tracefix.orchestrator.controller import TraceFixController
+from tracefix.visual_api import run_visual_server
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -33,6 +34,18 @@ def build_parser() -> argparse.ArgumentParser:
         "--session-root",
         help="Directory where per-session artifacts should be written.",
     )
+
+    visual_parser = subparsers.add_parser(
+        "visual-server",
+        help="Run the optional local visual demo adapter for the TraceFix frontend.",
+    )
+    visual_parser.add_argument("--host", default="127.0.0.1", help="Host for the local visual server.")
+    visual_parser.add_argument("--port", type=int, default=8123, help="Port for the local visual server.")
+    visual_parser.add_argument(
+        "--frontend-dist",
+        help="Optional path to a built frontend dist directory to serve alongside the API.",
+    )
+
     return parser
 
 
@@ -40,8 +53,17 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
 
+    if args.command == "visual-server":
+        frontend_dist = args.frontend_dist or _default_frontend_dist()
+        run_visual_server(
+            host=args.host,
+            port=args.port,
+            static_dir=frontend_dist,
+        )
+        return 0
+
     if args.command != "debug":
-        parser.error("Only the debug command is currently supported.")
+        parser.error("Only the debug and visual-server commands are currently supported.")
 
     if args.expected_output_file and args.expected_output_text:
         parser.error("Use only one of --expected-output-file or --expected-output-text.")
@@ -111,3 +133,10 @@ def _format_summary(state) -> str:
             f"verifier={getattr(verifier_result, 'decision', 'not_run')}"
         )
     return "\n".join(lines)
+
+
+def _default_frontend_dist() -> str | None:
+    candidate = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+    if candidate.exists():
+        return str(candidate)
+    return None

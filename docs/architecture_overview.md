@@ -116,6 +116,26 @@ Outputs:
 
 - `VerifierResult`
 
+### Visual API and Frontend (Optional Demo Layer)
+
+Role:
+
+- provide a local presentation surface for the current repository
+- visualize handoffs, traces, diffs, verifier outcomes, and evaluation artifacts
+- keep the CLI-first core untouched
+
+Inputs:
+
+- existing sample cases
+- existing controller/session artifacts
+- existing evaluation CSV outputs
+
+Outputs:
+
+- a local browser view for demos, screenshots, and video walkthroughs
+
+This layer is deliberately thin. It does not move controller logic into HTTP routes and it does not create a new product boundary.
+
 ## Handoffs
 
 The main control flow is:
@@ -141,6 +161,8 @@ Each handoff is written to `trace.jsonl` as an inspectable event:
 
 This matters for the course rubric because the system is not just a list of components. It shows real coordination and real transitions between roles.
 
+The optional frontend simply visualizes those same handoffs after or during a local demo run.
+
 ## Tools, Memory, Data, and State Design
 
 ### Tools
@@ -151,6 +173,7 @@ TraceFix uses a deliberately small toolset:
 - temporary working directories
 - structured JSONL trace logging
 - Markdown and CSV artifact generation
+- a tiny local HTTP adapter for visualization only
 
 It does not use:
 
@@ -201,6 +224,8 @@ This design is course-appropriate because it is:
 - easy to cite in a report
 - narrow enough to stay feasible
 
+The optional frontend helps with communication, not with problem solving. It improves inspectability for reviewers without changing the core debugging method.
+
 ## Stopping Conditions
 
 TraceFix stops under these conditions:
@@ -231,3 +256,5 @@ TraceFix is better for this course project because reviewers can see:
 - what patch was attempted
 - what happened on rerun
 - why the final decision was accept, retry, escalate, or stop
+
+The optional frontend strengthens that advantage even further by turning those same artifacts into a demo-friendly visual walkthrough without replacing the underlying CLI workflow.

@@ -9,6 +9,14 @@ python -m pip install --upgrade pip
 python -m pip install -e .
 ```
 
+Optional frontend setup:
+
+```bash
+cd frontend
+npm install
+cd ..
+```
+
 ## Run One Case
 
 Name error case:
@@ -43,6 +51,49 @@ python -m tracefix debug cases/bug_case_01_syntax_error.py \
 PYTHONPATH=src python3 scripts/run_demo_case.py
 ```
 
+## Run the Visual Frontend
+
+Backend adapter only:
+
+```bash
+PYTHONPATH=src python -m tracefix visual-server --port 8123
+```
+
+Frontend development server:
+
+```bash
+cd frontend
+npm run dev
+```
+
+Then open:
+
+```text
+http://127.0.0.1:5173
+```
+
+## Run the Visual Frontend in Built Static Mode
+
+Build:
+
+```bash
+cd frontend
+npm run build
+cd ..
+```
+
+Serve both API and static assets from the TraceFix CLI:
+
+```bash
+PYTHONPATH=src python -m tracefix visual-server --port 8123
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8123
+```
+
 ## Run Evaluation
 
 Full suite:
@@ -74,6 +125,12 @@ Focused controller and evaluation tests:
 PYTHONPATH=src python -m unittest tests.test_controller_flow tests.test_evaluation_runner -v
 ```
 
+Focused visual adapter test:
+
+```bash
+PYTHONPATH=src python -m unittest tests.test_visual_api -v
+```
+
 ## Output Locations
 
 Single-case debug sessions:
@@ -90,3 +147,9 @@ Evaluation runs:
 - `evaluation/runs/<timestamp>/failure_cases.csv`
 - `evaluation/runs/<timestamp>/run_summary.md`
 - `evaluation/runs/<timestamp>/cases/<case_id>/`
+
+Visual frontend:
+
+- reads and surfaces the latest session under `outputs/sessions/`
+- reads and surfaces the latest evaluation run under `evaluation/runs/`
+- does not replace CLI outputs

@@ -12,5 +12,9 @@ logs/traces/*.json
 outputs/patches/*.py
 outputs/sessions/
 evaluation/runs/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/package-lock.json
 !logs/traces/example_trace_name_error.json
 !outputs/patches/example_fixed_name_error.py
