@@ -1,26 +1,26 @@
 # AI Usage Log Template
 
-Use this file to record exactly how AI tools were used during the project.
+Use this template to document AI assistance transparently for the course project.
 
-## Session Metadata
+## Entry Metadata
 
 - Date:
-- Project milestone or stage:
+- Stage or milestone:
 - Team member:
 
-## Tool Record
+## Tool Details
 
 - Tool name and version:
 - What it was used for:
 - Exact prompt:
 
-## AI Output Summary
+## Output Handling
 
-- What the tool returned:
-- Which parts were accepted:
-- Which parts were rejected:
+- Short summary of what the tool returned:
+- Which parts were kept:
+- Which parts were rejected or rewritten:
 
-## Manual Changes Afterward
+## Manual Work After AI
 
 - What I changed manually afterward:
 - Why I changed it:
@@ -29,10 +29,9 @@ Use this file to record exactly how AI tools were used during the project.
 
 - What I verified independently:
 - Commands or tests run:
-- Evidence paths:
+- Artifact or evidence paths:
 
-## Notes
+## Risks and Notes
 
-- Risks or limitations noticed:
-- Follow-up actions:
-
+- Any concerns about correctness, scope, or overreach:
+- Follow-up action:

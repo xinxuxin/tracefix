@@ -1,95 +1,105 @@
-# TraceFix
+# TraceFix: A Multi-Agent Python Debugging System with Sandboxed Execution and Patch Verification
 
-TraceFix is a Track A course project scaffold for a conservative multi-agent Python debugging system. It focuses on one real and narrow user problem: helping beginner-to-intermediate Python users debug a single small script without requiring internet access, package installation during debugging, or unsafe autonomous shell behavior.
-
-This repository is intentionally CLI-first and local-only. It is scoped to single-file Python debugging only.
-
-## Project Purpose
-
-TraceFix demonstrates how a small agentic system can coordinate bounded execution, diagnosis, patch generation, and verification for simple Python failures while leaving a clear audit trail for course reviewers.
-
-## Scoped Problem
-
-The system targets short Python scripts that fail with beginner-to-intermediate bug classes. The goal is not full autonomous repair. The goal is a narrow, explainable workflow that:
-
-1. runs a script safely in a bounded local subprocess
-2. interprets the failure
-3. proposes one conservative patch
-4. verifies whether the observed crash is removed
-5. logs the handoffs, stopping conditions, and outputs
+TraceFix is a CLI-first course project that demonstrates a narrow, auditable agentic workflow for debugging single-file Python scripts. The system runs buggy code in bounded local execution, diagnoses the observed failure, synthesizes a conservative patch, reruns the patched script, and then verifies whether the result should be accepted, retried, escalated, or stopped. The repository is organized to be easy to run locally, easy to inspect for course reviewers, and easy to reuse in a final report or demo video.
 
 ## Target User
 
-The primary user is a beginner-to-intermediate Python learner who has a single `.py` file that crashes and needs help understanding what happened and whether a minimal patch candidate works.
+TraceFix is designed for beginner-to-intermediate Python users who are debugging one small `.py` file at a time and need help understanding a failure without relying on package installation, internet access, or broad autonomous shell behavior.
+
+## Why This Is Agentic
+
+TraceFix is agentic because it is not a single one-shot prompt that jumps directly from code to “final answer.” Instead, it uses distinct components with separate responsibilities, explicit handoffs, bounded retries, and stopping conditions:
+
+- `Executor` gathers evidence from bounded execution.
+- `Diagnoser` turns evidence into a localized repair hypothesis.
+- `Patcher` proposes the smallest reasonable code edit.
+- `Verifier` decides whether that patch should be accepted, retried, escalated, or stopped.
+- `Controller` manages session state, artifacts, retries, and governance.
+
+That separation makes the behavior easier to inspect, easier to evaluate, and safer to explain in a technical course setting.
 
 ## Architecture Overview
 
-The architecture maps directly to the required system components:
+Core components:
 
-- `Executor`: runs the script in isolated, bounded Python execution
-- `Diagnoser`: maps an observed failure to a narrow supported bug class or an explicit stop
-- `Patcher`: generates one conservative patch candidate
-- `Verifier`: reruns the patched script and decides whether the original failure was resolved
-- `Controller`: manages retries, state, handoffs, traces, and stopping conditions
+- `Executor`
+  - Runs the current script in bounded local Python execution.
+  - Captures structured evidence: exit code, stdout, stderr, traceback, timeout, duration, and outcome label.
+- `Diagnoser`
+  - Interprets execution evidence.
+  - Produces a localized bug hypothesis, repair direction, confidence level, and uncertainty notes.
+- `Patcher`
+  - Synthesizes the smallest reasonable patch from the diagnosis.
+  - Produces updated code, diff, changed regions, and patch confidence.
+- `Verifier`
+  - Compares original and rerun behavior.
+  - Decides `accept`, `retry`, `escalate`, or `stop`.
+- `Controller`
+  - Orchestrates the workflow, persists artifacts, and enforces bounded retries and stopping conditions.
 
-The source layout keeps these concerns visible:
+See [architecture_overview.md](/Users/macbook/Desktop/agentic/docs/architecture_overview.md) for the detailed handoff design.
 
-- runtime code under `src/tracefix/`
-- architecture-aligned source buckets under `src/tracefix/agents/`, `src/tracefix/orchestrator/`, and `src/tracefix/sandbox/`
-- evaluation artifacts under `evaluation/`
-- demo cases under `cases/`
-- trace logs under `logs/`
-- saved patch outputs under `outputs/`
-
-## Repository Layout
+## Repository Tree
 
 ```text
-.
+tracefix/
 ├── .env.example
 ├── README.md
 ├── cases/
+│   ├── README.md
+│   ├── bug_case_01_syntax_error.py
+│   ├── bug_case_02_name_error.py
+│   ├── bug_case_03_argument_mismatch.py
+│   ├── bug_case_04_missing_file.py
+│   ├── bug_case_05_runtime_exception.py
+│   ├── bug_case_06_failure_superficial_fix.py
+│   ├── bug_case_07_failure_ambiguous_behavior.py
+│   └── ...
 ├── config/
+│   └── settings.example.json
 ├── docs/
+│   ├── architecture_overview.md
+│   ├── core_flow_walkthrough.md
+│   ├── final_submission_checklist.md
+│   ├── governance_and_risks.md
+│   ├── run_instructions.md
+│   ├── failure_analysis_seed_notes.md
+│   └── screenshot_index_template.md
 ├── evaluation/
+│   ├── ai_usage_log_template.md
+│   ├── evaluation_plan.md
+│   ├── failure_log_template.csv
+│   ├── results_template.csv
+│   └── run_evaluation.py
 ├── logs/
 │   └── traces/
 ├── outputs/
-│   └── patches/
-├── prompts/
-├── pyproject.toml
+│   ├── patches/
+│   └── sessions/
 ├── scripts/
+│   └── run_demo_case.py
 ├── src/
 │   └── tracefix/
-│       ├── __init__.py
-│       ├── __main__.py
 │       ├── agents/
+│       ├── orchestrator/
+│       ├── sandbox/
+│       ├── utils/
 │       ├── cli.py
 │       ├── config.py
 │       ├── controller.py
-│       ├── diagnoser.py
-│       ├── executor.py
 │       ├── logger.py
-│       ├── models.py
-│       ├── orchestrator/
-│       ├── patcher.py
-│       ├── sandbox/
 │       ├── state.py
-│       ├── types.py
-│       └── verifier.py
+│       └── types.py
 └── tests/
 ```
 
-## Python Version and Dependencies
+## Setup Instructions
 
-- Python 3.11 target
-- Minimal dependencies
-- Standard library only in the current scaffold
-- No web app
-- Local CLI-first workflow
+Python target:
 
-The dependency declaration lives in [pyproject.toml](/Users/macbook/Desktop/agentic/pyproject.toml). No separate `requirements.txt` is needed for this stage.
+- Python `3.11`
 
-## Setup
+Minimal setup:
 
 ```bash
 python3.11 -m venv .venv
@@ -98,74 +108,106 @@ python -m pip install --upgrade pip
 python -m pip install -e .
 ```
 
-## Run Commands
-
-Run the CLI on a sample case:
-
-```bash
-python -m tracefix debug cases/name_error_bug.py
-```
-
-Run with an explicit config file:
-
-```bash
-python -m tracefix debug cases/missing_colon_bug.py --config config/settings.example.json
-```
-
 Run tests:
 
 ```bash
 PYTHONPATH=src python -m unittest discover -s tests -v
 ```
 
-## Logs and Outputs
+More detailed commands are collected in [run_instructions.md](/Users/macbook/Desktop/agentic/docs/run_instructions.md).
 
-- JSON execution traces live under `logs/traces/`
-- saved patch artifacts live under `outputs/patches/`
-- evaluation templates live under `evaluation/`
-- screenshot index and reviewer-facing visual evidence live under `docs/`
+## Environment and Config Notes
 
-These locations are intentionally easy to inspect so a course reviewer can follow system behavior without reading every source file first.
+- Default runtime settings live in [config/settings.example.json](/Users/macbook/Desktop/agentic/config/settings.example.json).
+- Optional environment variables are documented in [.env.example](/Users/macbook/Desktop/agentic/.env.example).
+- The system is local-only and does not require external services.
+- Session artifacts are written per run so that traces are easy to inspect afterward.
 
-## Example Artifacts
+## How To Run a Single Case
 
-- Example trace: [logs/traces/example_trace_name_error.json](/Users/macbook/Desktop/agentic/logs/traces/example_trace_name_error.json)
-- Example saved patch: [outputs/patches/example_fixed_name_error.py](/Users/macbook/Desktop/agentic/outputs/patches/example_fixed_name_error.py)
-- Demo cases:
-  - [cases/name_error_bug.py](/Users/macbook/Desktop/agentic/cases/name_error_bug.py)
-  - [cases/missing_colon_bug.py](/Users/macbook/Desktop/agentic/cases/missing_colon_bug.py)
-  - [cases/type_error_bug.py](/Users/macbook/Desktop/agentic/cases/type_error_bug.py)
+Run one case with inline expected output:
 
-## Assumptions
+```bash
+python -m tracefix debug cases/bug_case_02_name_error.py --expected-output-text "10.70"
+```
 
-- Input is exactly one Python source file
-- The debugging target does not require package installation during the debug session
-- The system is allowed to execute bounded local Python subprocesses only
-- Verification means checking whether the observed crash is removed, not proving full semantic correctness
-- Retries remain bounded and conservative
-- The user can inspect generated logs and outputs locally
+Run one case with an explicit config file:
 
-## What Is Out of Scope
+```bash
+python -m tracefix debug cases/bug_case_04_missing_file.py --config config/settings.example.json --expected-output-text "Guest"
+```
 
-- Multi-file repositories
-- Dependency installation during debugging
-- Web UI or hosted service deployment
-- Internet-dependent tools
-- Autonomous shell behavior beyond bounded Python execution
-- Hidden environment assumptions
-- Broad semantic program repair
-- High-risk patching without clear evidence
+Run the demo script:
 
-## Planned Evidence Package
+```bash
+PYTHONPATH=src python3 scripts/run_demo_case.py
+```
 
-The final course submission should include:
+## How To Run Evaluation
 
-- traces and structured logs from real runs
-- evaluation result files
-- documented failure cases and failure analysis
-- screenshots indexed in `docs/screenshot_index_template.md`
-- an AI usage log showing prompts, manual edits, and independent verification
+Run the full evaluation package:
 
-## Notes on Scope
+```bash
+PYTHONPATH=src python3 evaluation/run_evaluation.py
+```
 
-This repository intentionally stays narrow. The current working prototype handles only a small set of conservative bug classes and stops explicitly when a fix cannot be justified.
+Run selected cases only:
+
+```bash
+PYTHONPATH=src python3 evaluation/run_evaluation.py \
+  --case-id bug_case_02_name_error \
+  --case-id bug_case_06_failure_superficial_fix
+```
+
+## Where Traces, Logs, and Results Are Saved
+
+Single interactive debug session outputs:
+
+- per-session controller artifacts under `outputs/sessions/<case>_<session_id>/`
+- intermediate patch diffs under `outputs/sessions/<case>_<session_id>/patches/`
+- accepted final patch under `outputs/sessions/<case>_<session_id>/final_patched_script.py`
+- session summary under `outputs/sessions/<case>_<session_id>/summary.md`
+- handoff trace under `outputs/sessions/<case>_<session_id>/trace.jsonl`
+
+Evaluation outputs:
+
+- run-level results under `evaluation/runs/<timestamp>/evaluation_results.csv`
+- failure subset under `evaluation/runs/<timestamp>/failure_cases.csv`
+- run summary under `evaluation/runs/<timestamp>/run_summary.md`
+- case-specific session artifacts under `evaluation/runs/<timestamp>/cases/<case_id>/`
+
+## Scoped Boundaries
+
+TraceFix is intentionally narrow:
+
+- single-file Python scripts only
+- beginner-to-intermediate bug classes only
+- no internet access
+- no package installation during debugging
+- no web app or web server
+- no multi-file repository reasoning
+- bounded retries with conservative stopping
+
+## Known Limitations
+
+- Behavioral verification is strongest only when expected output is available.
+- The patcher intentionally refuses many broader runtime or semantic issues.
+- The sandbox is lightweight and course-appropriate, not a hardened security boundary.
+- TraceFix does not currently attempt broad logic repair or multi-file fixes.
+- Some successful reruns are escalated rather than accepted when the verifier lacks a strong behavior oracle.
+
+## Suggested Demo Cases
+
+Best happy-path demo cases:
+
+- [bug_case_02_name_error.py](/Users/macbook/Desktop/agentic/cases/bug_case_02_name_error.py)
+- [bug_case_04_missing_file.py](/Users/macbook/Desktop/agentic/cases/bug_case_04_missing_file.py)
+
+Best retry / governance demos:
+
+- [bug_case_06_failure_superficial_fix.py](/Users/macbook/Desktop/agentic/cases/bug_case_06_failure_superficial_fix.py)
+- [bug_case_07_failure_ambiguous_behavior.py](/Users/macbook/Desktop/agentic/cases/bug_case_07_failure_ambiguous_behavior.py)
+
+Best conservative-stop demo:
+
+- [bug_case_05_runtime_exception.py](/Users/macbook/Desktop/agentic/cases/bug_case_05_runtime_exception.py)
