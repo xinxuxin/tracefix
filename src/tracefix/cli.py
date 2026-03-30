@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import argparse
+import getpass
+import os
+import sys
 from pathlib import Path
 
 from tracefix.config import TraceFixConfig
@@ -54,11 +57,15 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     if args.command == "visual-server":
+        config_path = _resolve_runtime_config_path()
+        runtime_config = _load_runtime_config(config_path)
+        _prompt_for_provider_api_key_if_needed(runtime_config)
         frontend_dist = args.frontend_dist or _default_frontend_dist()
         run_visual_server(
             host=args.host,
             port=args.port,
             static_dir=frontend_dist,
+            config_path=config_path,
         )
         return 0
 
@@ -68,15 +75,14 @@ def main(argv: list[str] | None = None) -> int:
     if args.expected_output_file and args.expected_output_text:
         parser.error("Use only one of --expected-output-file or --expected-output-text.")
 
-    config = TraceFixConfig.from_env()
-    if args.config:
-        config = config.merge(TraceFixConfig.from_json(args.config))
+    config = _load_runtime_config(args.config)
     config = config.with_overrides(
         max_attempts=args.max_retries,
         timeout_seconds=args.timeout_seconds,
         trace_dir=args.trace_dir,
         patch_dir=args.patch_dir,
     )
+    _prompt_for_provider_api_key_if_needed(config)
 
     expected_output = _load_expected_output(
         expected_output_file=args.expected_output_file,
@@ -139,4 +145,63 @@ def _default_frontend_dist() -> str | None:
     candidate = Path(__file__).resolve().parents[2] / "frontend" / "dist"
     if candidate.exists():
         return str(candidate)
+    return None
+
+
+def _resolve_runtime_config_path(explicit_config_path: str | None = None) -> str | None:
+    if explicit_config_path:
+        return explicit_config_path
+    env_config_path = os.getenv("TRACEFIX_CONFIG")
+    if env_config_path:
+        return env_config_path
+    default_path = Path("config/settings.example.json")
+    if default_path.exists():
+        return str(default_path)
+    return None
+
+
+def _load_runtime_config(config_path: str | None) -> TraceFixConfig:
+    config = TraceFixConfig.from_env()
+    if config_path:
+        path = Path(config_path)
+        if path.exists():
+            config = config.merge(TraceFixConfig.from_json(path))
+    return config
+
+
+def _prompt_for_provider_api_key_if_needed(
+    config: TraceFixConfig,
+    *,
+    prompt_fn=None,
+    stdin_isatty: bool | None = None,
+) -> bool:
+    env_var_name = _provider_api_env_var_name(config)
+    if env_var_name is None:
+        return False
+    if os.getenv(env_var_name):
+        return False
+    is_tty = sys.stdin.isatty() if stdin_isatty is None else stdin_isatty
+    if not is_tty:
+        return False
+
+    prompt = prompt_fn or getpass.getpass
+    provider_label = "OpenAI" if env_var_name == "OPENAI_API_KEY" else "Anthropic"
+    api_key = prompt(
+        f"{provider_label} API key not found in environment. "
+        "Enter it for this session only (input hidden, leave blank to continue with local fallback): "
+    ).strip()
+    if not api_key:
+        return False
+    os.environ[env_var_name] = api_key
+    return True
+
+
+def _provider_api_env_var_name(config: TraceFixConfig) -> str | None:
+    if not (config.enable_llm_diagnoser or config.enable_llm_patcher or config.enable_llm_verifier_assist):
+        return None
+    mode = (config.provider_mode or "local").lower()
+    if mode == "openai":
+        return "OPENAI_API_KEY"
+    if mode == "anthropic":
+        return "ANTHROPIC_API_KEY"
     return None

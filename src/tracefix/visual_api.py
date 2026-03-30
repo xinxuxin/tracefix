@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import json
 import mimetypes
+import os
 import tempfile
 from dataclasses import dataclass
 from http import HTTPStatus
@@ -433,12 +434,16 @@ class TraceFixVisualService:
         return "idle"
 
     def _load_config(self, config_path: Path | None) -> TraceFixConfig:
+        config = TraceFixConfig.from_env()
         if config_path and config_path.exists():
-            return TraceFixConfig.from_json(config_path)
+            return config.merge(TraceFixConfig.from_json(config_path))
+        env_config = os.getenv("TRACEFIX_CONFIG")
+        if env_config and Path(env_config).exists():
+            return config.merge(TraceFixConfig.from_json(env_config))
         default_config = self.repo_root / "config" / "settings.example.json"
         if default_config.exists():
-            return TraceFixConfig.from_json(default_config)
-        return TraceFixConfig()
+            return config.merge(TraceFixConfig.from_json(default_config))
+        return config
 
     def _read_planned_rows(self) -> list[dict[str, str]]:
         template_path = self.evaluation_root / "results_template.csv"
@@ -631,8 +636,9 @@ def run_visual_server(
     host: str = "127.0.0.1",
     port: int = 8123,
     static_dir: str | Path | None = None,
+    config_path: str | Path | None = None,
 ) -> None:
-    service = TraceFixVisualService()
+    service = TraceFixVisualService(config_path=Path(config_path) if config_path is not None else None)
     resolved_static = Path(static_dir).resolve() if static_dir else None
     server = TraceFixVisualServer((host, port), service=service, static_dir=resolved_static)
     try:

@@ -24,6 +24,13 @@ python -m pip install -e ".[openai]"
 python -m pip install -e ".[anthropic]"
 ```
 
+Security note:
+
+- Keep real API keys out of JSON config files.
+- Prefer environment variables.
+- If you run TraceFix interactively with provider mode enabled and the matching key is missing, the CLI will ask once with hidden input for the current session only.
+- Do not commit real keys to GitHub.
+
 ## Run One Case
 
 Name error case:
@@ -88,6 +95,7 @@ python -m tracefix debug cases/bug_case_04_missing_file.py --expected-output-tex
 
 - If provider mode is disabled, TraceFix stays fully local.
 - If provider mode is enabled but the API key is missing, the system falls back to local logic.
+- In interactive terminal runs, TraceFix will first offer a hidden prompt for the missing provider key and only then fall back if you leave it blank.
 - If the provider SDK is missing or the provider response fails, the system falls back to local logic when fallback is enabled.
 - Provider mode, model name, fallback usage, and provider errors are recorded in session artifacts and trace payloads.
 
@@ -174,7 +182,7 @@ PYTHONPATH=src python -m unittest tests.test_visual_api -v
 Focused provider/fallback tests:
 
 ```bash
-PYTHONPATH=src python -m unittest tests.test_provider_modes -v
+PYTHONPATH=src python -m unittest tests.test_provider_modes tests.test_cli_runtime_prompt -v
 ```
 
 ## Output Locations

@@ -149,6 +149,8 @@ More detailed commands are collected in [run_instructions.md](/Users/macbook/Des
 - Session artifacts are written per run so that traces are easy to inspect afterward.
 - The frontend is optional and local-only. It is intended for demos, screenshots, and walkthroughs, not as a replacement for the CLI.
 - API mode is optional. If no API key is configured, TraceFix still runs in local mode and does not crash.
+- API keys should be supplied as environment variables only. Do not hardcode them and do not commit them to GitHub.
+- If provider mode is enabled in an interactive terminal and the matching API key is missing, the CLI will prompt once with hidden input for the current session only.
 
 ## How To Run a Single Case
 
@@ -192,6 +194,8 @@ export TRACEFIX_ENABLE_LLM_DIAGNOSER=1
 export TRACEFIX_ENABLE_LLM_PATCHER=1
 ```
 
+If you do not export `OPENAI_API_KEY` first, the CLI will securely prompt for it at run time in interactive use and keep it only in the current process environment.
+
 Then run the same CLI flow:
 
 ```bash
@@ -219,6 +223,8 @@ export TRACEFIX_PROVIDER_MODE=anthropic
 export TRACEFIX_ENABLE_LLM_DIAGNOSER=1
 export TRACEFIX_ENABLE_LLM_PATCHER=1
 ```
+
+If you do not export `ANTHROPIC_API_KEY` first, the CLI will securely prompt for it at run time in interactive use and keep it only in the current process environment.
 
 Then run:
 
@@ -334,6 +340,7 @@ Optional API enhancement also does not widen the scope. It only changes how Diag
 - Some successful reruns are escalated rather than accepted when the verifier lacks a strong behavior oracle.
 - The optional visual layer is optimized for local demos and screenshots, not for deployment or multi-user use.
 - API mode depends on optional SDK installation and environment variables; when those are missing or fail, the system falls back to local logic.
+- Runtime prompting is session-only convenience, not persistent secret storage.
 
 ## Suggested Demo Cases
 
