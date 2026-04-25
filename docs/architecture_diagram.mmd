@@ -1,0 +1,79 @@
+flowchart TD
+    User(["👤 User\n(beginner–intermediate\nPython learner)"])
+    Script[/"📄 Single .py Script\n+ optional expected_output"/]
+
+    subgraph Controller ["🎛️  Controller — session state · retry budget · artifact persistence"]
+        direction TB
+        C_in["receive script + config"]
+        C_retry{"retries\nexhausted?"}
+        C_out["write session_state.json\nsummary.md · failure_summary.md"]
+    end
+
+    subgraph Executor ["⚙️  Executor — bounded local subprocess"]
+        EX["run Python -I -B\ntempdir · 2 s timeout\ncapture stdout · stderr · traceback"]
+        POLICY["🛡️ Policy gate\nblocks: socket · subprocess · eval/exec\nos.system · shutil · /etc /usr /bin"]
+    end
+
+    subgraph Diagnoser ["🔍 Diagnoser — root-cause hypothesis"]
+        DG_local["local rules\nAST · typo-match · traceback parse"]
+        DG_llm["LLM path (optional)\nOpenAI gpt-4.1\nAnthropic claude-3-5-sonnet-latest\ntemperature 0.0 · max_tokens 1200"]
+        DG_local -- "enable_llm_diagnoser=true" --> DG_llm
+    end
+
+    subgraph Patcher ["🔧 Patcher — minimal code edit or refusal"]
+        PT_local["local templates\nrename · colon · guard · call-site fix"]
+        PT_llm["LLM path (optional)\nOpenAI gpt-4.1\nAnthropic claude-3-5-sonnet-latest\ntemperature 0.0 · max_tokens 1200"]
+        PT_refuse["❌ refuse\n(no safe bounded edit)"]
+        PT_local -- "enable_llm_patcher=true" --> PT_llm
+    end
+
+    subgraph Verifier ["✅  Verifier — deterministic accept / retry / escalate / stop"]
+        VF["compare original vs rerun\ncheck expected_output oracle\ncheck patch minimality\ncheck regression flags"]
+    end
+
+    subgraph Outcomes ["📋 Final Outcomes"]
+        O_accept["✅ accept\n(patch verified)"]
+        O_retry["🔄 retry\n(new attempt)"]
+        O_escalate["🙋 escalate → HITL\n(no oracle · ambiguous)"]
+        O_stop["🛑 stop\n(no safe patch · exhausted)"]
+    end
+
+    subgraph Artifacts ["💾 Artifacts (per session)"]
+        A1["trace.jsonl\nsession_state.json\nsummary.md"]
+        A2["patches/attempt_N.diff\nfinal_patched_script.py"]
+        A3["evaluation_results.csv\nfailure_log.md"]
+    end
+
+    User --> Script
+    Script --> C_in
+    C_in --> EX
+    EX --> POLICY
+    POLICY --> DG_local
+    DG_local --> PT_local
+    PT_refuse --> C_retry
+    PT_local --> EX
+    PT_llm --> EX
+    EX --> VF
+    VF --> O_accept
+    VF --> O_retry
+    VF --> O_escalate
+    VF --> O_stop
+    O_retry --> C_retry
+    C_retry -- "yes" --> O_stop
+    C_retry -- "no" --> DG_local
+    O_accept --> C_out
+    O_escalate --> C_out
+    O_stop --> C_out
+    C_out --> A1
+    C_out --> A2
+    C_out --> A3
+    O_escalate -. "human review\nrequired" .-> User
+
+    style Controller fill:#e8f4fd,stroke:#2196F3
+    style Executor fill:#fff3e0,stroke:#FF9800
+    style Diagnoser fill:#f3e5f5,stroke:#9C27B0
+    style Patcher fill:#e8f5e9,stroke:#4CAF50
+    style Verifier fill:#fce4ec,stroke:#E91E63
+    style Outcomes fill:#f5f5f5,stroke:#9E9E9E
+    style Artifacts fill:#fafafa,stroke:#BDBDBD
+    style User fill:#e3f2fd,stroke:#1976D2
