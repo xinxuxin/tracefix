@@ -1,10 +1,10 @@
 # Evaluation Version Notes
 
-- Generated at: 2026-04-25T17:24:19Z
+- Generated at: 2026-04-25T19:09:23Z
 - Evaluation mode: local deterministic TraceFix mode
 - Provider mode: local unless the caller explicitly exported provider environment variables before running this script
 - Baseline mode: deterministic crash-only acceptance baseline
-- Run artifact directory: `/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z`
+- Run artifact directory: `/var/folders/tv/ts4s28352bj43brk84z9y6280000gn/T/tmp06c1t7qv`
 - Notes: Results are produced by executing the repository evaluation runner, not hand-filled.
 
 ## Configuration Snapshot
