@@ -18,6 +18,7 @@ class AnthropicProvider:
         self,
         prompt: str,
         *,
+        temperature: float,
         timeout_seconds: int,
         max_tokens: int,
     ) -> ProviderGeneration:
@@ -33,7 +34,7 @@ class AnthropicProvider:
             response = client.messages.create(
                 model=self.model_name,
                 max_tokens=max_tokens,
-                temperature=0,
+                temperature=temperature,
                 messages=[{"role": "user", "content": prompt}],
             )
         except Exception as exc:

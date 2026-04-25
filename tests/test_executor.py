@@ -104,6 +104,36 @@ class ExecutorTests(unittest.TestCase):
         self.assertEqual(result.exception_type, "PolicyBlocked")
         self.assertIn("Network access", result.stderr)
 
+    def test_policy_blocks_shell_execution(self) -> None:
+        result = self.agent.run(
+            code="import os\nos.system('echo unsafe')\n",
+            session_metadata=SessionMetadata(session_id="shell-policy-case"),
+            execution_config=self.config,
+        )
+
+        self.assertEqual(result.outcome_label, "blocked_by_policy")
+        self.assertIn("Shell execution", result.stderr)
+
+    def test_policy_blocks_dynamic_eval(self) -> None:
+        result = self.agent.run(
+            code="eval('1 + 1')\n",
+            session_metadata=SessionMetadata(session_id="eval-policy-case"),
+            execution_config=self.config,
+        )
+
+        self.assertEqual(result.outcome_label, "blocked_by_policy")
+        self.assertIn("Dynamic evaluation", result.stderr)
+
+    def test_policy_blocks_sensitive_absolute_path_access(self) -> None:
+        result = self.agent.run(
+            code='open("/etc/passwd", "r", encoding="utf-8").read()\n',
+            session_metadata=SessionMetadata(session_id="sensitive-path-policy-case"),
+            execution_config=self.config,
+        )
+
+        self.assertEqual(result.outcome_label, "blocked_by_policy")
+        self.assertIn("sensitive absolute paths", result.stderr)
+
     def test_simple_test_spec_arguments_are_forwarded(self) -> None:
         result = self.agent.run(
             code="import sys\nprint(sys.argv[1])\n",

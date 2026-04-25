@@ -34,6 +34,7 @@ class TraceFixConfig:
     provider_model_name: str | None = None
     openai_model_name: str = "gpt-4.1"
     anthropic_model_name: str = "claude-3-5-sonnet-latest"
+    api_temperature: float = 0.0
     api_timeout_seconds: int = 20
     api_max_tokens: int = 1200
     enable_llm_diagnoser: bool = False
@@ -55,6 +56,7 @@ class TraceFixConfig:
             provider_model_name=payload.get("provider_model_name"),
             openai_model_name=str(payload.get("openai_model_name", "gpt-4.1")),
             anthropic_model_name=str(payload.get("anthropic_model_name", "claude-3-5-sonnet-latest")),
+            api_temperature=float(payload.get("api_temperature", 0.0)),
             api_timeout_seconds=int(payload.get("api_timeout_seconds", 20)),
             api_max_tokens=int(payload.get("api_max_tokens", 1200)),
             enable_llm_diagnoser=_read_bool(payload.get("enable_llm_diagnoser"), False),
@@ -82,6 +84,7 @@ class TraceFixConfig:
                 "TRACEFIX_ANTHROPIC_MODEL",
                 "claude-3-5-sonnet-latest",
             ),
+            api_temperature=float(os.getenv("TRACEFIX_API_TEMPERATURE", "0.0")),
             api_timeout_seconds=int(os.getenv("TRACEFIX_API_TIMEOUT_SECONDS", "20")),
             api_max_tokens=int(os.getenv("TRACEFIX_API_MAX_TOKENS", "1200")),
             enable_llm_diagnoser=_read_bool(os.getenv("TRACEFIX_ENABLE_LLM_DIAGNOSER"), False),
@@ -106,6 +109,7 @@ class TraceFixConfig:
             provider_model_name=other.provider_model_name,
             openai_model_name=other.openai_model_name,
             anthropic_model_name=other.anthropic_model_name,
+            api_temperature=other.api_temperature,
             api_timeout_seconds=other.api_timeout_seconds,
             api_max_tokens=other.api_max_tokens,
             enable_llm_diagnoser=other.enable_llm_diagnoser,
@@ -123,6 +127,7 @@ class TraceFixConfig:
         patch_dir: str | Path | None = None,
         provider_mode: str | None = None,
         provider_model_name: str | None = None,
+        api_temperature: float | None = None,
         api_timeout_seconds: int | None = None,
         api_max_tokens: int | None = None,
         enable_llm_diagnoser: bool | None = None,
@@ -138,6 +143,7 @@ class TraceFixConfig:
             patch_dir=Path(patch_dir) if patch_dir is not None else self.patch_dir,
             provider_mode=provider_mode if provider_mode is not None else self.provider_mode,
             provider_model_name=provider_model_name if provider_model_name is not None else self.provider_model_name,
+            api_temperature=api_temperature if api_temperature is not None else self.api_temperature,
             api_timeout_seconds=api_timeout_seconds if api_timeout_seconds is not None else self.api_timeout_seconds,
             api_max_tokens=api_max_tokens if api_max_tokens is not None else self.api_max_tokens,
             enable_llm_diagnoser=(

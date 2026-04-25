@@ -6,6 +6,8 @@ TraceFix is a CLI-first course project that demonstrates a narrow, auditable age
 
 TraceFix is designed for beginner-to-intermediate Python users who are debugging one small `.py` file at a time and need help understanding a failure without relying on package installation, internet access, or broad autonomous shell behavior.
 
+Concrete scenario: a student writes a short script that raises `NameError` because a variable is referenced before it is assigned. A generic AI coding tool might rewrite the whole function and leave the student unsure whether the new behavior is correct. TraceFix instead runs the script, records the failing line, diagnoses the undefined name, proposes a minimal patch, reruns the result, verifies expected behavior when available, and saves the evidence.
+
 ## Why This Is Agentic
 
 TraceFix is agentic because it is not a single one-shot prompt that jumps directly from code to “final answer.” Instead, it uses distinct components with separate responsibilities, explicit handoffs, bounded retries, and stopping conditions:
@@ -50,6 +52,18 @@ Core components:
   - Visualizes agent handoffs, traces, patch diffs, verifier decisions, sample cases, and evaluation outputs.
 
 See [architecture_overview.md](/Users/macbook/Desktop/agentic/docs/architecture_overview.md) for the detailed handoff design.
+
+Provider and model policy:
+
+- default mode is `local`
+- optional OpenAI Diagnoser/Patcher model: `gpt-4.1`
+- optional Anthropic Diagnoser/Patcher model: `claude-3-5-sonnet-latest`
+- API temperature: `0.0`
+- max output tokens: `1200`
+- provider fallback: local rules when keys, SDKs, requests, or responses fail
+- Verifier remains deterministic-first
+
+See [model_and_provider_policy.md](/Users/macbook/Desktop/agentic/docs/model_and_provider_policy.md) and [state_schema.md](/Users/macbook/Desktop/agentic/docs/state_schema.md).
 
 ## Repository Tree
 
@@ -280,6 +294,21 @@ Run the full evaluation package:
 PYTHONPATH=src python3 evaluation/run_evaluation.py
 ```
 
+The final Phase 3 evidence run is checked in under:
+
+- [evaluation/evaluation_results.csv](/Users/macbook/Desktop/agentic/evaluation/evaluation_results.csv)
+- [evaluation/failure_log.md](/Users/macbook/Desktop/agentic/evaluation/failure_log.md)
+- [evaluation/baseline_comparison.csv](/Users/macbook/Desktop/agentic/evaluation/baseline_comparison.csv)
+- [evaluation/runs/20260425T172418Z](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z)
+
+Summary of that run:
+
+- 7 executed cases
+- 4 accepted bounded repairs
+- 2 conservative stops
+- 1 no-oracle escalation
+- 7 of 7 cases matched the expected governance decision
+
 Run selected cases only:
 
 ```bash
@@ -330,6 +359,22 @@ TraceFix is intentionally narrow:
 
 The optional frontend does not widen the debugging scope. It is only a local visualization and demo surface over the same single-file workflow.
 Optional API enhancement also does not widen the scope. It only changes how Diagnoser and Patcher generate their bounded outputs.
+
+Sandbox note: TraceFix uses a lightweight course sandbox based on temporary working directories, bounded subprocess execution, isolated Python mode, timeout enforcement, and a static policy gate for common out-of-scope patterns. It is not a hardened security boundary for adversarial code. See [governance_and_risks.md](/Users/macbook/Desktop/agentic/docs/governance_and_risks.md) and [executor_notes.md](/Users/macbook/Desktop/agentic/docs/executor_notes.md).
+
+## Phase 3 Submission Evidence
+
+Key final-submission files:
+
+- [AI_USAGE.md](/Users/macbook/Desktop/agentic/AI_USAGE.md)
+- [docs/ai_prompt_appendix.md](/Users/macbook/Desktop/agentic/docs/ai_prompt_appendix.md)
+- [docs/ai_logs/](/Users/macbook/Desktop/agentic/docs/ai_logs)
+- [docs/final_report_draft.md](/Users/macbook/Desktop/agentic/docs/final_report_draft.md)
+- [docs/phase3_submission_checklist.md](/Users/macbook/Desktop/agentic/docs/phase3_submission_checklist.md)
+- [docs/phase3_validation_report.md](/Users/macbook/Desktop/agentic/docs/phase3_validation_report.md)
+- [docs/phase3_workplan.md](/Users/macbook/Desktop/agentic/docs/phase3_workplan.md)
+- [docs/screenshots/screenshot_index.md](/Users/macbook/Desktop/agentic/docs/screenshots/screenshot_index.md)
+- [media/demo_video_link.txt](/Users/macbook/Desktop/agentic/media/demo_video_link.txt)
 
 ## Known Limitations
 

@@ -1,0 +1,8 @@
+case_id,baseline_name,baseline_outcome,tracefix_outcome,baseline_failure_mode,tracefix_decision,notes
+bug_case_01_syntax_error,deterministic_crash_only_acceptance,accept,accept,same_decision,accept,Baseline accepts any non-crashing patched rerun and does not use expected-output or no-oracle verification.
+bug_case_02_name_error,deterministic_crash_only_acceptance,accept,accept,same_decision,accept,Baseline accepts any non-crashing patched rerun and does not use expected-output or no-oracle verification.
+bug_case_03_argument_mismatch,deterministic_crash_only_acceptance,accept,accept,same_decision,accept,Baseline accepts any non-crashing patched rerun and does not use expected-output or no-oracle verification.
+bug_case_04_missing_file,deterministic_crash_only_acceptance,accept,accept,same_decision,accept,Baseline accepts any non-crashing patched rerun and does not use expected-output or no-oracle verification.
+bug_case_05_runtime_exception,deterministic_crash_only_acceptance,stop,stop,same_decision,stop,Baseline accepts any non-crashing patched rerun and does not use expected-output or no-oracle verification.
+bug_case_06_failure_superficial_fix,deterministic_crash_only_acceptance,accept,stop,false_positive_acceptance_risk,stop,Baseline accepts any non-crashing patched rerun and does not use expected-output or no-oracle verification.
+bug_case_07_failure_ambiguous_behavior,deterministic_crash_only_acceptance,accept,escalate,false_positive_acceptance_risk,escalate,Baseline accepts any non-crashing patched rerun and does not use expected-output or no-oracle verification.

@@ -44,10 +44,11 @@ The evaluation runner records these fields where feasible:
 - task success
 - final decision / outcome label
 - retry count
-- total latency in milliseconds
+- total latency in seconds
 - patch breadth or diff size
 - whether the original failure was resolved
 - whether behavior matched expectation
+- trace path, session state path, summary path, and artifact citations
 
 ## Reproducible Artifacts
 

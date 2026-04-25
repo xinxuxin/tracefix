@@ -22,16 +22,44 @@ RESULT_COLUMNS = [
     "case_type",
     "input_or_scenario",
     "expected_behavior",
+    "actual_behavior",
     "ideal_system_action",
     "judgment_rule",
     "task_success",
     "outcome_label",
+    "final_decision",
     "retry_count",
-    "latency_ms",
+    "latency_seconds",
     "patch_breadth",
     "original_failure_resolved",
     "behavior_match_status",
     "evidence_or_citation",
+    "trace_path",
+    "session_state_path",
+    "summary_path",
+    "notes",
+]
+
+TEST_CASE_COLUMNS = [
+    "case_id",
+    "filename",
+    "case_type",
+    "input_or_scenario",
+    "expected_behavior",
+    "ideal_system_action",
+    "expected_final_decision",
+    "expected_output",
+    "judgment_rule",
+    "notes",
+]
+
+BASELINE_COLUMNS = [
+    "case_id",
+    "baseline_name",
+    "baseline_outcome",
+    "tracefix_outcome",
+    "baseline_failure_mode",
+    "tracefix_decision",
     "notes",
 ]
 
@@ -181,6 +209,7 @@ def run_selected_cases(
 
     rows: list[dict[str, str]] = []
     failure_rows: list[dict[str, str]] = []
+    baseline_rows: list[dict[str, str]] = []
 
     for case_id in selected_ids:
         case = CASE_SPECS[case_id]
@@ -203,38 +232,62 @@ def run_selected_cases(
         latency_ms = int((time.perf_counter() - start) * 1000)
 
         last_attempt = state.attempt_details[-1] if state.attempt_details else {}
-        last_patch = last_attempt.get("patch_result") if isinstance(last_attempt, dict) else None
-        last_verifier = last_attempt.get("verifier_result") if isinstance(last_attempt, dict) else None
+        last_patch = _latest_detail_value(state.attempt_details, "patch_result")
+        last_verifier = _latest_detail_value(state.attempt_details, "verifier_result")
+        last_rerun = _latest_detail_value(state.attempt_details, "rerun_execution_result")
         patch_breadth = getattr(last_patch, "minimality_flag", "none")
         original_failure_resolved = getattr(last_verifier, "original_failure_resolved", False)
         behavior_match_status = state.behavior_match_status or getattr(last_verifier, "behavior_match_status", "n/a")
         task_success = "yes" if state.final_decision == case.expected_final_decision else "no"
+        final_decision = state.final_decision or state.status
+        actual_behavior = _actual_behavior(state.status, final_decision, last_rerun)
+        latency_seconds = f"{latency_ms / 1000:.3f}"
+        trace_path = state.trace_events_path or ""
+        session_state_path = state.trace_path or ""
+        summary_path = state.summary_path or ""
 
         row = {
             "case_id": case.case_id,
             "case_type": case.case_type,
             "input_or_scenario": case.input_or_scenario,
             "expected_behavior": case.expected_behavior,
+            "actual_behavior": actual_behavior,
             "ideal_system_action": case.ideal_system_action,
             "judgment_rule": case.judgment_rule,
             "task_success": task_success,
             "outcome_label": state.final_decision or state.status,
+            "final_decision": final_decision,
             "retry_count": str(len(state.attempt_details)),
-            "latency_ms": str(latency_ms),
+            "latency_seconds": latency_seconds,
             "patch_breadth": patch_breadth,
             "original_failure_resolved": str(bool(original_failure_resolved)),
             "behavior_match_status": behavior_match_status or "n/a",
-            "evidence_or_citation": state.summary_path or state.trace_path or "",
+            "evidence_or_citation": summary_path or trace_path or session_state_path,
+            "trace_path": trace_path,
+            "session_state_path": session_state_path,
+            "summary_path": summary_path,
             "notes": case.notes,
         }
         rows.append(row)
+        baseline_rows.append(_baseline_row(case, state, last_rerun))
 
         if state.final_decision != "accept":
             failure_rows.append(row)
 
+    _write_test_cases(output_dir / "test_cases.csv", selected_ids)
     _write_csv(output_dir / "evaluation_results.csv", rows)
     _write_csv(output_dir / "failure_cases.csv", failure_rows)
+    _write_failure_log(output_dir / "failure_log.md", failure_rows)
+    _write_baseline_csv(output_dir / "baseline_comparison.csv", baseline_rows)
     _write_run_summary(output_dir / "run_summary.md", rows)
+    _write_version_notes(output_dir / "version_notes.md", output_dir)
+    _write_root_evaluation_files(
+        rows=rows,
+        failure_rows=failure_rows,
+        baseline_rows=baseline_rows,
+        selected_ids=selected_ids,
+        output_dir=output_dir,
+    )
     return rows
 
 
@@ -247,16 +300,57 @@ def _write_csv(destination: Path, rows: list[dict[str, str]]) -> None:
             writer.writerow(row)
 
 
+def _write_test_cases(destination: Path, selected_ids: list[str]) -> None:
+    rows = []
+    for case_id in selected_ids:
+        case = CASE_SPECS[case_id]
+        rows.append(
+            {
+                "case_id": case.case_id,
+                "filename": case.filename,
+                "case_type": case.case_type,
+                "input_or_scenario": case.input_or_scenario,
+                "expected_behavior": case.expected_behavior,
+                "ideal_system_action": case.ideal_system_action,
+                "expected_final_decision": case.expected_final_decision,
+                "expected_output": (case.expected_output or "").replace("\n", "\\n"),
+                "judgment_rule": case.judgment_rule,
+                "notes": case.notes,
+            }
+        )
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with destination.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=TEST_CASE_COLUMNS)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow(row)
+
+
+def _write_baseline_csv(destination: Path, rows: list[dict[str, str]]) -> None:
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with destination.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=BASELINE_COLUMNS)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow(row)
+
+
 def _write_run_summary(destination: Path, rows: list[dict[str, str]]) -> None:
     total = len(rows)
     accepted = sum(1 for row in rows if row["outcome_label"] == "accept")
+    stopped = sum(1 for row in rows if row["outcome_label"] == "stop")
+    escalated = sum(1 for row in rows if row["outcome_label"] == "escalate")
+    task_success = sum(1 for row in rows if row["task_success"] == "yes")
     unresolved = total - accepted
     lines = [
         "# Evaluation Run Summary",
         "",
         f"- Total cases: {total}",
         f"- Accepted cases: {accepted}",
+        f"- Stopped cases: {stopped}",
+        f"- Escalated cases: {escalated}",
         f"- Unresolved or governed cases: {unresolved}",
+        f"- Cases matching expected final decision: {task_success}",
         "",
         "## Case Outcomes",
         "",
@@ -265,9 +359,129 @@ def _write_run_summary(destination: Path, rows: list[dict[str, str]]) -> None:
         lines.append(
             f"- `{row['case_id']}`: outcome=`{row['outcome_label']}`, "
             f"task_success=`{row['task_success']}`, retries=`{row['retry_count']}`, "
-            f"patch_breadth=`{row['patch_breadth']}`"
+            f"patch_breadth=`{row['patch_breadth']}`, evidence=`{row['summary_path']}`"
         )
     destination.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _write_failure_log(destination: Path, rows: list[dict[str, str]]) -> None:
+    lines = [
+        "# Failure and Governance Log",
+        "",
+        "This log is generated from executed TraceFix evaluation cases. It includes unresolved, stopped, and escalated cases rather than invented examples.",
+        "",
+    ]
+    if not rows:
+        lines.append("No failure or governance cases were produced in this run.")
+    for index, row in enumerate(rows, start=1):
+        lines.extend(
+            [
+                f"## failure_{index:02d}: {row['case_id']}",
+                "",
+                f"- Failure ID: `failure_{index:02d}`",
+                f"- Case ID: `{row['case_id']}`",
+                f"- What triggered the problem: {row['input_or_scenario']}",
+                f"- Expected behavior: {row['expected_behavior']}",
+                f"- Actual behavior: {row['actual_behavior']}",
+                f"- System decision: `{row['final_decision']}`",
+                f"- Why verifier accepted/rejected/escalated/stopped: {row['judgment_rule']}",
+                f"- Root cause: {row['notes']}",
+                f"- Evidence artifacts: `{row['summary_path']}`, `{row['trace_path']}`, `{row['session_state_path']}`",
+                "- What changed after testing: The case was retained as evidence for conservative stopping/escalation and documented in Phase 3 materials.",
+                "- Current status: Documented boundary case for final submission.",
+                "",
+            ]
+        )
+    destination.write_text("\n".join(lines), encoding="utf-8")
+
+
+def _write_version_notes(destination: Path, output_dir: Path) -> None:
+    lines = [
+        "# Evaluation Version Notes",
+        "",
+        f"- Generated at: {datetime.utcnow().isoformat(timespec='seconds')}Z",
+        "- Evaluation mode: local deterministic TraceFix mode",
+        "- Provider mode: local unless the caller explicitly exported provider environment variables before running this script",
+        "- Baseline mode: deterministic crash-only acceptance baseline",
+        f"- Run artifact directory: `{output_dir}`",
+        "- Notes: Results are produced by executing the repository evaluation runner, not hand-filled.",
+        "",
+        "## Configuration Snapshot",
+        "",
+        "- Max attempts per case: 2",
+        "- Executor timeout per run: 2 seconds",
+        "- Default provider mode in checked-in config: local",
+        "- OpenAI default model if enabled: gpt-4.1",
+        "- Anthropic default model if enabled: claude-3-5-sonnet-latest",
+        "- API temperature if enabled: 0.0",
+        "- API max tokens if enabled: 1200",
+    ]
+    destination.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _write_root_evaluation_files(
+    *,
+    rows: list[dict[str, str]],
+    failure_rows: list[dict[str, str]],
+    baseline_rows: list[dict[str, str]],
+    selected_ids: list[str],
+    output_dir: Path,
+) -> None:
+    evaluation_root = ROOT / "evaluation"
+    _write_test_cases(evaluation_root / "test_cases.csv", selected_ids)
+    _write_csv(evaluation_root / "evaluation_results.csv", rows)
+    _write_csv(evaluation_root / "failure_cases.csv", failure_rows)
+    _write_failure_log(evaluation_root / "failure_log.md", failure_rows)
+    _write_baseline_csv(evaluation_root / "baseline_comparison.csv", baseline_rows)
+    _write_run_summary(evaluation_root / "summary.md", rows)
+    _write_version_notes(evaluation_root / "version_notes.md", output_dir)
+
+
+def _actual_behavior(status: str, final_decision: str, rerun_result) -> str:
+    if rerun_result is None:
+        return f"Session ended with status={status}, decision={final_decision}, and no patch rerun."
+    stdout = getattr(rerun_result, "stdout", "").strip()
+    exception = getattr(rerun_result, "exception_type", None)
+    outcome = getattr(rerun_result, "outcome_label", "unknown")
+    if stdout:
+        return f"Session ended with decision={final_decision}; latest rerun outcome={outcome}; stdout={stdout!r}."
+    if exception:
+        return f"Session ended with decision={final_decision}; latest rerun outcome={outcome}; exception={exception}."
+    return f"Session ended with decision={final_decision}; latest rerun outcome={outcome}."
+
+
+def _latest_detail_value(attempt_details: list[dict[str, object]], key: str):
+    for detail in reversed(attempt_details):
+        value = detail.get(key) if isinstance(detail, dict) else None
+        if value is not None:
+            return value
+    return None
+
+
+def _baseline_row(case: EvaluationCase, state, rerun_result) -> dict[str, str]:
+    baseline_name = "deterministic_crash_only_acceptance"
+    if rerun_result is not None and getattr(rerun_result, "succeeded", False):
+        baseline_outcome = "accept"
+    else:
+        baseline_outcome = "stop"
+
+    tracefix_decision = state.final_decision or state.status
+    if baseline_outcome == "accept" and tracefix_decision != "accept":
+        failure_mode = "false_positive_acceptance_risk"
+    elif baseline_outcome != tracefix_decision:
+        failure_mode = "decision_mismatch"
+    else:
+        failure_mode = "same_decision"
+
+    return {
+        "case_id": case.case_id,
+        "baseline_name": baseline_name,
+        "baseline_outcome": baseline_outcome,
+        "tracefix_outcome": tracefix_decision,
+        "baseline_failure_mode": failure_mode,
+        "tracefix_decision": tracefix_decision,
+        "notes": "Baseline accepts any non-crashing patched rerun and does not use expected-output or no-oracle verification.",
+    }
 
 
 if __name__ == "__main__":

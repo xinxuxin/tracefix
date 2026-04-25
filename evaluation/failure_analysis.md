@@ -2,6 +2,12 @@
 
 This document summarizes the most important failure modes for the current TraceFix prototype and aligns them with the implemented controller and verifier behavior.
 
+For the final Phase 3 executed failure log, see:
+
+- [failure_log.md](/Users/macbook/Desktop/agentic/evaluation/failure_log.md)
+- [docs/phase3_failure_analysis.md](/Users/macbook/Desktop/agentic/docs/phase3_failure_analysis.md)
+- [runs/20260425T172418Z](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z)
+
 ## Current Failure Modes
 
 ### 1. Unsupported Runtime Failures

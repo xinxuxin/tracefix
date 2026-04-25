@@ -20,6 +20,7 @@ class OpenAIProvider:
         self,
         prompt: str,
         *,
+        temperature: float,
         timeout_seconds: int,
         max_tokens: int,
     ) -> ProviderGeneration:
@@ -33,6 +34,7 @@ class OpenAIProvider:
             response = client.responses.create(
                 model=self.model_name,
                 input=prompt,
+                temperature=temperature,
                 max_output_tokens=max_tokens,
             )
         except Exception as exc:

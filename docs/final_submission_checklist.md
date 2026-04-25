@@ -2,6 +2,8 @@
 
 Use this checklist to map repository artifacts to likely course submission needs.
 
+For the Phase 3-specific audited checklist, use [phase3_submission_checklist.md](/Users/macbook/Desktop/agentic/docs/phase3_submission_checklist.md).
+
 ## Core Repository
 
 - [ ] Repository folder is clean, runnable, and pushed to GitHub

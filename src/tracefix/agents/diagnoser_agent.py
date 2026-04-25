@@ -108,6 +108,7 @@ class DiagnoserAgent:
             prompt = self.build_prompt(request)
             generation = active_provider.generate_json(
                 prompt,
+                temperature=self.config.api_temperature,
                 timeout_seconds=self.config.api_timeout_seconds,
                 max_tokens=self.config.api_max_tokens,
             )

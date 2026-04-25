@@ -1,0 +1,285 @@
+{
+  "session_id": "20260425T172419048519Z",
+  "target_file": "/Users/macbook/Desktop/agentic/cases/bug_case_06_failure_superficial_fix.py",
+  "max_attempts": 2,
+  "timeout_seconds": 2,
+  "status": "stopped_no_patch",
+  "started_at": "2026-04-25T17:24:19Z",
+  "original_execution": {
+    "command": [
+      "/opt/homebrew/bin/python3.11",
+      "-I",
+      "-B",
+      "bug_case_06_failure_superficial_fix.py"
+    ],
+    "return_code": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"/private/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_ssqtjjrl/bug_case_06_failure_superficial_fix.py\", line 6, in <module>\n    greet(\"TraceFix\")\n  File \"/private/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_ssqtjjrl/bug_case_06_failure_superficial_fix.py\", line 3, in greet\n    print(message.upper())\n          ^^^^^^^\nNameError: name 'message' is not defined. Did you mean: 'messgae'?\n",
+    "timed_out": false,
+    "duration_ms": 29,
+    "exception_type": "NameError",
+    "exception_message": "name 'message' is not defined. Did you mean: 'messgae'?",
+    "failure_line": 3,
+    "outcome_label": "runtime_exception",
+    "traceback_text": "Traceback (most recent call last):\n  File \"/private/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_ssqtjjrl/bug_case_06_failure_superficial_fix.py\", line 6, in <module>\n    greet(\"TraceFix\")\n  File \"/private/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_ssqtjjrl/bug_case_06_failure_superficial_fix.py\", line 3, in greet\n    print(message.upper())\n          ^^^^^^^\nNameError: name 'message' is not defined. Did you mean: 'messgae'?\n",
+    "temp_file_path": "/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_ssqtjjrl/bug_case_06_failure_superficial_fix.py",
+    "session_id": "20260425T172419048519Z",
+    "used_interpreter": "/opt/homebrew/bin/python3.11",
+    "blocked_reason": null,
+    "policy_notes": [],
+    "expected_output": "Hello, TraceFix!\n"
+  },
+  "expected_output": "Hello, TraceFix!\n",
+  "session_dir": "/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_06_failure_superficial_fix/sessions/bug_case_06_failure_superficial_fix_20260425T172419048519Z",
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "diagnosis": {
+        "supported": true,
+        "bug_class": "name_error_typo",
+        "summary": "The undefined name 'message' is likely a typo for the existing identifier 'messgae'.",
+        "evidence": [
+          "Outcome label from executor: runtime_exception",
+          "Exception type from executor: NameError",
+          "Exception message from executor: name 'message' is not defined. Did you mean: 'messgae'?",
+          "Localized code region: line 3 ->     print(message.upper())",
+          "Undefined symbol from execution result: message"
+        ],
+        "confidence": 0.9,
+        "line_number": 3,
+        "target_name": "message",
+        "replacement_name": "messgae",
+        "stop_reason": null
+      },
+      "patch_candidate": {
+        "strategy": "rename_identifier",
+        "rationale": "Applied rename_identifier using a minimal localized patch.",
+        "patched_source": "def greet(name):\n    messgae = f\"Hello, {name}!\"\n    print(messgae.upper())\n\n\ngreet(\"TraceFix\")\n",
+        "changed_lines": [
+          3
+        ]
+      },
+      "verification": {
+        "success": false,
+        "summary": "The crash was removed, but the observed output does not match the expected behavior. A bounded follow-up patch is plausible because an explicit expected output exists.",
+        "failure_kind": "retry",
+        "execution_result": {
+          "command": [
+            "/opt/homebrew/bin/python3.11",
+            "-I",
+            "-B",
+            "bug_case_06_failure_superficial_fix.py"
+          ],
+          "return_code": 0,
+          "stdout": "HELLO, TRACEFIX!\n",
+          "stderr": "",
+          "timed_out": false,
+          "duration_ms": 24,
+          "exception_type": null,
+          "exception_message": null,
+          "failure_line": null,
+          "outcome_label": "normal_completion",
+          "traceback_text": null,
+          "temp_file_path": "/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_od_t8cf4/bug_case_06_failure_superficial_fix.py",
+          "session_id": "20260425T172419048519Z",
+          "used_interpreter": "/opt/homebrew/bin/python3.11",
+          "blocked_reason": null,
+          "policy_notes": [],
+          "expected_output": "Hello, TraceFix!\n"
+        }
+      }
+    },
+    {
+      "attempt_index": 2,
+      "diagnosis": {
+        "supported": false,
+        "bug_class": "simple_logic_mismatch",
+        "summary": "Observed output differs from the expected output, but execution evidence does not localize the bug to one line.",
+        "evidence": [
+          "The script executed successfully, so no runtime exception directly localized the problem.",
+          "Observed stdout: HELLO, TRACEFIX!",
+          "Expected output: Hello, TraceFix!\n"
+        ],
+        "confidence": 0.34,
+        "line_number": 1,
+        "target_name": null,
+        "replacement_name": null,
+        "stop_reason": "unsupported_failure"
+      },
+      "patch_candidate": null,
+      "verification": null
+    }
+  ],
+  "attempt_details": [
+    {
+      "attempt_index": 1,
+      "diagnosis_result": {
+        "primary_bug_class": "name_error",
+        "likely_root_cause": "The undefined name 'message' is likely a typo for the existing identifier 'messgae'.",
+        "localized_code_region": {
+          "start_line": 3,
+          "end_line": 3,
+          "snippet": "    print(message.upper())"
+        },
+        "evidence_summary": [
+          "Outcome label from executor: runtime_exception",
+          "Exception type from executor: NameError",
+          "Exception message from executor: name 'message' is not defined. Did you mean: 'messgae'?",
+          "Localized code region: line 3 ->     print(message.upper())",
+          "Undefined symbol from execution result: message"
+        ],
+        "recommended_repair_direction": "Replace 'message' with 'messgae' in the localized statement.",
+        "confidence_score": 0.9,
+        "confidence_band": "high",
+        "uncertainty_notes": "The execution evidence identifies the undefined symbol, but intent is uncertain if several similarly named variables exist.",
+        "alternative_hypotheses": [
+          {
+            "bug_class": "name_error",
+            "reason": "The name may instead be intended as a new variable that should be defined before use.",
+            "confidence_band": "low"
+          }
+        ],
+        "direct_cause": "name 'message' is not defined. Did you mean: 'messgae'?",
+        "downstream_symptom": "Execution stopped when Python evaluated the undefined name.",
+        "repair_hints": {
+          "line_number": 3,
+          "target_name": "message",
+          "replacement_name": "messgae"
+        },
+        "execution_mode": "local",
+        "provider_name": null,
+        "model_name": null,
+        "fallback_used": false,
+        "provider_error": null
+      },
+      "patch_result": {
+        "updated_code": "def greet(name):\n    messgae = f\"Hello, {name}!\"\n    print(messgae.upper())\n\n\ngreet(\"TraceFix\")\n",
+        "patch_diff": "--- before.py\n+++ after.py\n@@ -1,6 +1,6 @@\n def greet(name):\n     messgae = f\"Hello, {name}!\"\n-    print(message.upper())\n+    print(messgae.upper())\n \n \n greet(\"TraceFix\")\n",
+        "changed_regions": [
+          {
+            "start_line": 3,
+            "end_line": 3,
+            "original_snippet": "    print(message.upper())",
+            "updated_snippet": "    print(messgae.upper())"
+          }
+        ],
+        "patch_summary": "Applied rename_identifier using a minimal localized patch.",
+        "intended_effect": "Replace 'message' with 'messgae' in the localized statement.",
+        "minimality_flag": "minimal",
+        "confidence_score": 0.9,
+        "refusal_reason": null,
+        "strategy_id": "rename_identifier",
+        "execution_mode": "local",
+        "provider_name": null,
+        "model_name": null,
+        "fallback_used": false,
+        "provider_error": null
+      },
+      "rerun_execution_result": {
+        "command": [
+          "/opt/homebrew/bin/python3.11",
+          "-I",
+          "-B",
+          "bug_case_06_failure_superficial_fix.py"
+        ],
+        "return_code": 0,
+        "stdout": "HELLO, TRACEFIX!\n",
+        "stderr": "",
+        "timed_out": false,
+        "duration_ms": 24,
+        "exception_type": null,
+        "exception_message": null,
+        "failure_line": null,
+        "outcome_label": "normal_completion",
+        "traceback_text": null,
+        "temp_file_path": "/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_od_t8cf4/bug_case_06_failure_superficial_fix.py",
+        "session_id": "20260425T172419048519Z",
+        "used_interpreter": "/opt/homebrew/bin/python3.11",
+        "blocked_reason": null,
+        "policy_notes": [],
+        "expected_output": "Hello, TraceFix!\n"
+      },
+      "verifier_result": {
+        "decision": "retry",
+        "rationale": "The crash was removed, but the observed output does not match the expected behavior. A bounded follow-up patch is plausible because an explicit expected output exists.",
+        "regression_flags": [],
+        "behavior_match_status": "mismatched_expected_output",
+        "original_failure_resolved": true,
+        "uncertainty_notes": "The program runs, but behavior still misses the available oracle.",
+        "targeted_feedback_for_retry": [
+          "Adjust the patch toward the expected output rather than only preventing the exception."
+        ]
+      },
+      "patch_path": "/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_06_failure_superficial_fix/sessions/bug_case_06_failure_superficial_fix_20260425T172419048519Z/patches/attempt_01_candidate.py",
+      "diff_path": "/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_06_failure_superficial_fix/sessions/bug_case_06_failure_superficial_fix_20260425T172419048519Z/patches/attempt_01.diff"
+    },
+    {
+      "attempt_index": 2,
+      "diagnosis_result": {
+        "primary_bug_class": "simple_logic_mismatch",
+        "likely_root_cause": "Observed output differs from the expected output, but execution evidence does not localize the bug to one line.",
+        "localized_code_region": {
+          "start_line": 1,
+          "end_line": 3,
+          "snippet": "def greet(name):\n    messgae = f\"Hello, {name}!\"\n    print(messgae.upper())"
+        },
+        "evidence_summary": [
+          "The script executed successfully, so no runtime exception directly localized the problem.",
+          "Observed stdout: HELLO, TRACEFIX!",
+          "Expected output: Hello, TraceFix!\n"
+        ],
+        "recommended_repair_direction": "Compare the code path producing stdout with the expected behavior before editing unrelated sections.",
+        "confidence_score": 0.34,
+        "confidence_band": "low",
+        "uncertainty_notes": "No exception was raised, so localization is weak and the mismatch may require human inspection of program intent. Prior patch history exists, so the next diagnosis should avoid repeating the same failed repair direction without new evidence. Verifier feedback indicates earlier repair attempts did not fully resolve the issue, which lowers confidence in one-line explanations.",
+        "alternative_hypotheses": [
+          {
+            "bug_class": "common_runtime_exception",
+            "reason": "The logic may be correct, and the expectation itself may be stale or incomplete.",
+            "confidence_band": "low"
+          }
+        ],
+        "direct_cause": "Output mismatch",
+        "downstream_symptom": "The script completes but does not match the expected observable behavior.",
+        "repair_hints": {},
+        "execution_mode": "local",
+        "provider_name": null,
+        "model_name": null,
+        "fallback_used": false,
+        "provider_error": null
+      },
+      "patch_result": {
+        "updated_code": "def greet(name):\n    messgae = f\"Hello, {name}!\"\n    print(messgae.upper())\n\n\ngreet(\"TraceFix\")\n",
+        "patch_diff": "",
+        "changed_regions": [],
+        "patch_summary": "Patch refused",
+        "intended_effect": "Compare the code path producing stdout with the expected behavior before editing unrelated sections.",
+        "minimality_flag": "minimal",
+        "confidence_score": 0.1,
+        "refusal_reason": "Diagnosis confidence is too low for a bounded patch without stronger localized evidence.",
+        "strategy_id": null,
+        "execution_mode": "local",
+        "provider_name": null,
+        "model_name": null,
+        "fallback_used": false,
+        "provider_error": null
+      },
+      "rerun_execution_result": null,
+      "verifier_result": null,
+      "patch_path": null,
+      "diff_path": null
+    }
+  ],
+  "trace_events_path": "/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_06_failure_superficial_fix/sessions/bug_case_06_failure_superficial_fix_20260425T172419048519Z/trace.jsonl",
+  "final_message": "Diagnosis confidence is too low for a bounded patch without stronger localized evidence.",
+  "trace_path": "/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_06_failure_superficial_fix/sessions/bug_case_06_failure_superficial_fix_20260425T172419048519Z/session_state.json",
+  "saved_patch_path": null,
+  "summary_path": "/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_06_failure_superficial_fix/sessions/bug_case_06_failure_superficial_fix_20260425T172419048519Z/summary.md",
+  "failure_summary_path": "/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_06_failure_superficial_fix/sessions/bug_case_06_failure_superficial_fix_20260425T172419048519Z/failure_summary.md",
+  "intermediate_patch_paths": [
+    "/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_06_failure_superficial_fix/sessions/bug_case_06_failure_superficial_fix_20260425T172419048519Z/patches/attempt_01_candidate.py"
+  ],
+  "final_decision": "stop",
+  "behavior_match_status": null,
+  "handoff_count": 13
+}

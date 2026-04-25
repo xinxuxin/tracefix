@@ -24,9 +24,22 @@ class SandboxPolicy:
         (r"(^|\n)\s*from\s+subprocess\s+import\b", "Shell and subprocess spawning are blocked."),
         (r"\bos\.system\s*\(", "Shell execution is blocked by policy."),
         (r"\bos\.popen\s*\(", "Shell execution is blocked by policy."),
+        (r"\bos\.(remove|unlink|rmdir|rename|replace|chmod|chown)\s*\(", "Filesystem mutation through os is blocked."),
+        (r"(^|\n)\s*import\s+shutil\b", "Recursive filesystem mutation helpers are blocked."),
+        (r"(^|\n)\s*from\s+shutil\s+import\b", "Recursive filesystem mutation helpers are blocked."),
         (r"\burllib\.request\b", "Network fetches are blocked by policy."),
         (r"(^|\n)\s*import\s+requests\b", "Third-party network fetches are blocked by policy."),
         (r"(^|\n)\s*from\s+requests\s+import\b", "Third-party network fetches are blocked by policy."),
+        (r"\beval\s*\(", "Dynamic evaluation is blocked by policy."),
+        (r"\bexec\s*\(", "Dynamic execution is blocked by policy."),
+        (
+            r"\b(open|Path)\s*\(\s*['\"](?:/etc|/var|/usr|/bin|/sbin|/System|/Library|~)",
+            "Direct access to sensitive absolute paths is blocked.",
+        ),
+        (
+            r"\bPath\s*\([^)]*\)\.(write_text|write_bytes|unlink|rename|replace|chmod|rmdir)\s*\(",
+            "Path-based filesystem mutation is blocked.",
+        ),
     )
 
     def evaluate(self, code: str) -> PolicyDecision:

@@ -31,6 +31,7 @@ class LLMProvider(Protocol):
         self,
         prompt: str,
         *,
+        temperature: float,
         timeout_seconds: int,
         max_tokens: int,
     ) -> ProviderGeneration:

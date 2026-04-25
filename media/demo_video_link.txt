@@ -1,0 +1,15 @@
+TODO_FOR_TEAM_ADD_VIDEO_LINK
+
+Suggested contents before submission:
+- Final 5-minute demo video URL
+- Date recorded
+- Presenter(s)
+- Cases shown
+
+Recommended video sequence:
+1. Start with the frontend overview and architecture strip.
+2. Load `bug_case_02_name_error` or `bug_case_04_missing_file`.
+3. Run TraceFix and show the pipeline handoffs.
+4. Inspect trace timeline, patch diff, and verifier decision.
+5. Show evaluation dashboard.
+6. End with failure analysis for `bug_case_06_failure_superficial_fix` and `bug_case_07_failure_ambiguous_behavior`.

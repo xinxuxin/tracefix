@@ -31,11 +31,16 @@ This executor is deliberately conservative for a course prototype:
 
 - runs only Python code in a temporary working directory
 - requires a timeout
-- assumes no internet access
+- invokes Python with isolated mode `-I` when configured
+- disables bytecode writes with `-B` when configured
+- passes a minimal subprocess environment containing `PYTHONIOENCODING=utf-8`
+- assumes no internet access and blocks simple network patterns before execution
 - does not install packages
 - does not invoke arbitrary shell pipelines
 - can block simple out-of-scope behaviors such as network access or subprocess spawning
 - returns structured failure records instead of crashing when execution cannot proceed safely
+
+The policy gate lives in [src/tracefix/sandbox/policy.py](/Users/macbook/Desktop/agentic/src/tracefix/sandbox/policy.py). It currently blocks socket/network imports, subprocess imports, shell execution helpers, dynamic `eval`/`exec`, selected destructive filesystem operations, `shutil`, and direct access to sensitive absolute paths.
 
 ## Structured Logging
 
@@ -51,6 +56,7 @@ These trace events include session id, temporary file path, duration, interprete
 
 - The sandbox is lightweight and process-based, not a hardened security sandbox.
 - Policy blocking is pattern-based and intentionally simple.
+- Pattern blocking is not a defense against adversarial obfuscation.
 - The default production target is Python 3.11; if it is unavailable, the executor reports `unsupported_environment`.
 - The executor does not validate semantic correctness or user intent.
 - File system access inside the temporary working directory is still possible unless blocked by the script itself.

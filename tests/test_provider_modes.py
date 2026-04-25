@@ -30,7 +30,14 @@ class _StubProvider:
         self.model_name = model_name
         self.payload = payload
 
-    def generate_json(self, prompt: str, *, timeout_seconds: int, max_tokens: int) -> ProviderGeneration:
+    def generate_json(
+        self,
+        prompt: str,
+        *,
+        temperature: float,
+        timeout_seconds: int,
+        max_tokens: int,
+    ) -> ProviderGeneration:
         return ProviderGeneration(
             provider_name=self.provider_name,
             model_name=self.model_name,
@@ -43,7 +50,14 @@ class _FailingProvider:
     provider_name = "openai"
     model_name = "gpt-4.1"
 
-    def generate_json(self, prompt: str, *, timeout_seconds: int, max_tokens: int) -> ProviderGeneration:
+    def generate_json(
+        self,
+        prompt: str,
+        *,
+        temperature: float,
+        timeout_seconds: int,
+        max_tokens: int,
+    ) -> ProviderGeneration:
         raise ProviderError("simulated provider failure")
 
 

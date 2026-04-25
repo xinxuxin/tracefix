@@ -136,6 +136,39 @@ Outputs:
 
 This layer is deliberately thin. It does not move controller logic into HTTP routes and it does not create a new product boundary.
 
+## Model and Provider Assignments
+
+TraceFix defaults to deterministic local mode. Optional provider mode is limited to Diagnoser and Patcher assistance.
+
+| Component | Default mode | Optional provider mode | Config / implementation |
+|---|---|---|---|
+| Controller | local deterministic | none | [src/tracefix/orchestrator/controller.py](/Users/macbook/Desktop/agentic/src/tracefix/orchestrator/controller.py) |
+| Executor | local deterministic | none | [src/tracefix/sandbox/executor.py](/Users/macbook/Desktop/agentic/src/tracefix/sandbox/executor.py) |
+| Diagnoser | local rules | OpenAI or Anthropic when `enable_llm_diagnoser=true` | [src/tracefix/agents/diagnoser_agent.py](/Users/macbook/Desktop/agentic/src/tracefix/agents/diagnoser_agent.py) |
+| Patcher | local rules/templates | OpenAI or Anthropic when `enable_llm_patcher=true` | [src/tracefix/agents/patcher_agent.py](/Users/macbook/Desktop/agentic/src/tracefix/agents/patcher_agent.py) |
+| Verifier | local deterministic | config flag reserved for future assist; current verifier remains rules-first | [src/tracefix/agents/verifier_agent.py](/Users/macbook/Desktop/agentic/src/tracefix/agents/verifier_agent.py) |
+| Frontend | local visualization | none | [src/tracefix/visual_api.py](/Users/macbook/Desktop/agentic/src/tracefix/visual_api.py), [frontend/src/App.tsx](/Users/macbook/Desktop/agentic/frontend/src/App.tsx) |
+
+Configured defaults:
+
+- Provider mode: `local`
+- OpenAI model if enabled: `gpt-4.1`
+- Anthropic model if enabled: `claude-3-5-sonnet-latest`
+- API temperature: `0.0`
+- API max tokens: `1200`
+- API timeout: `20` seconds
+- Provider fallback: enabled
+
+If API keys, SDKs, or provider responses are unavailable, TraceFix records fallback metadata and returns to local logic. Provider metadata is logged in handoff events and persisted in session artifacts:
+
+- `execution_mode`
+- `provider_name`
+- `model_name`
+- `fallback_used`
+- `provider_error`
+
+See [model_and_provider_policy.md](/Users/macbook/Desktop/agentic/docs/model_and_provider_policy.md) for the central provider policy.
+
 ## Handoffs
 
 The main control flow is:
@@ -197,6 +230,16 @@ The primary memory object is the controller session state. It stores:
 - pointers to saved artifacts
 
 This state is persisted to `session_state.json` so the run can be inspected after the fact.
+
+The formal state schema and write permissions are documented in [state_schema.md](/Users/macbook/Desktop/agentic/docs/state_schema.md). In short:
+
+- Executor writes execution evidence.
+- Diagnoser writes diagnosis results.
+- Patcher writes patch results.
+- Verifier writes verification results.
+- Controller owns retry count, prior patch history, prior verifier feedback, final status, and artifact persistence.
+
+This keeps worker components mostly stateless while giving the Controller one auditable place to manage memory and lifecycle.
 
 ### Data Artifacts
 

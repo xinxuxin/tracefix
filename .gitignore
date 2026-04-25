@@ -1,4 +1,6 @@
 __pycache__/
+.venv/
+*.egg-info/
 .pytest_cache/
 .mypy_cache/
 .DS_Store
@@ -12,6 +14,10 @@ logs/traces/*.json
 outputs/patches/*.py
 outputs/sessions/
 evaluation/runs/
+!evaluation/runs/
+evaluation/runs/*
+!evaluation/runs/20260425T172418Z/
+!evaluation/runs/20260425T172418Z/**
 frontend/node_modules/
 frontend/dist/
 frontend/.vite/

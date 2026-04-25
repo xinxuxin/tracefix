@@ -31,6 +31,44 @@ TraceFix includes several deliberate boundaries:
 
 These boundaries reduce accidental scope expansion and make system behavior easier to justify in a course setting.
 
+## Sandbox Enforcement Details
+
+TraceFix uses a lightweight course sandbox implemented in:
+
+- [src/tracefix/sandbox/executor.py](/Users/macbook/Desktop/agentic/src/tracefix/sandbox/executor.py)
+- [src/tracefix/sandbox/policy.py](/Users/macbook/Desktop/agentic/src/tracefix/sandbox/policy.py)
+
+What is enforced in code:
+
+- code is written to a temporary directory created with `tempfile.TemporaryDirectory`
+- subprocess execution uses that temporary directory as `cwd`
+- Python runs through the configured interpreter with isolated mode `-I` and bytecode writes disabled with `-B`
+- every execution has a timeout, defaulting to 2 seconds in project config
+- stdout, stderr, traceback, timeout, exit code, and outcome labels are captured into `ExecutionResult`
+- policy-blocked code returns `blocked_by_policy` instead of crashing the controller
+- trace events record execution start, execution end, and policy-blocked execution
+
+Current static policy blocks common out-of-scope patterns:
+
+- socket imports and simple network fetch patterns
+- `requests` imports
+- `subprocess` imports
+- `os.system` and `os.popen`
+- destructive filesystem helpers such as `os.remove`, `os.unlink`, `os.rmdir`, `os.rename`, `os.replace`, `os.chmod`, and `os.chown`
+- `shutil` imports
+- dynamic `eval` and `exec`
+- direct access to sensitive absolute paths such as `/etc`, `/var`, `/usr`, `/bin`, `/sbin`, `/System`, `/Library`, and `~`
+- selected `Path(...).write_text`, `write_bytes`, `unlink`, `rename`, `replace`, `chmod`, and `rmdir` calls
+
+What is not claimed:
+
+- this is not a hardened container, VM, seccomp profile, or OS-level sandbox
+- pattern-based blocking cannot prove arbitrary untrusted Python is safe
+- file reads/writes inside the temporary working directory remain possible
+- the project does not claim protection against adversarial obfuscation
+
+The honest security claim is: TraceFix is a lightweight course sandbox suitable for bounded demo/evaluation scripts, not for executing hostile code.
+
 ## Trust Concerns
 
 The main trust concern is false-positive acceptance: a patch may remove the crash without preserving intended behavior.

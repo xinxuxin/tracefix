@@ -1,0 +1,128 @@
+{
+  "session_id": "20260425T172419016859Z",
+  "target_file": "/Users/macbook/Desktop/agentic/cases/bug_case_05_runtime_exception.py",
+  "max_attempts": 2,
+  "timeout_seconds": 2,
+  "status": "stopped_no_patch",
+  "started_at": "2026-04-25T17:24:19Z",
+  "original_execution": {
+    "command": [
+      "/opt/homebrew/bin/python3.11",
+      "-I",
+      "-B",
+      "bug_case_05_runtime_exception.py"
+    ],
+    "return_code": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"/private/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_9pc2je4q/bug_case_05_runtime_exception.py\", line 2, in <module>\n    print(items[3])\n          ~~~~~^^^\nIndexError: list index out of range\n",
+    "timed_out": false,
+    "duration_ms": 27,
+    "exception_type": "IndexError",
+    "exception_message": "list index out of range",
+    "failure_line": 2,
+    "outcome_label": "runtime_exception",
+    "traceback_text": "Traceback (most recent call last):\n  File \"/private/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_9pc2je4q/bug_case_05_runtime_exception.py\", line 2, in <module>\n    print(items[3])\n          ~~~~~^^^\nIndexError: list index out of range\n",
+    "temp_file_path": "/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_9pc2je4q/bug_case_05_runtime_exception.py",
+    "session_id": "20260425T172419016859Z",
+    "used_interpreter": "/opt/homebrew/bin/python3.11",
+    "blocked_reason": null,
+    "policy_notes": [],
+    "expected_output": null
+  },
+  "expected_output": null,
+  "session_dir": "/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_05_runtime_exception/sessions/bug_case_05_runtime_exception_20260425T172419016859Z",
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "diagnosis": {
+        "supported": false,
+        "bug_class": "common_runtime_exception",
+        "summary": "Execution evidence shows a runtime failure, but it does not support a narrow repair hypothesis yet.",
+        "evidence": [
+          "Outcome label from executor: runtime_exception",
+          "Exception type from executor: IndexError",
+          "Exception message from executor: list index out of range",
+          "Localized code region: line 2 -> print(items[3])"
+        ],
+        "confidence": 0.38,
+        "line_number": 2,
+        "target_name": null,
+        "replacement_name": null,
+        "stop_reason": "unsupported_failure"
+      },
+      "patch_candidate": null,
+      "verification": null
+    }
+  ],
+  "attempt_details": [
+    {
+      "attempt_index": 1,
+      "diagnosis_result": {
+        "primary_bug_class": "common_runtime_exception",
+        "likely_root_cause": "Execution evidence shows a runtime failure, but it does not support a narrow repair hypothesis yet.",
+        "localized_code_region": {
+          "start_line": 2,
+          "end_line": 2,
+          "snippet": "print(items[3])"
+        },
+        "evidence_summary": [
+          "Outcome label from executor: runtime_exception",
+          "Exception type from executor: IndexError",
+          "Exception message from executor: list index out of range",
+          "Localized code region: line 2 -> print(items[3])"
+        ],
+        "recommended_repair_direction": "Inspect the localized statement and the values reaching it before attempting a patch.",
+        "confidence_score": 0.38,
+        "confidence_band": "low",
+        "uncertainty_notes": "The exception identifies where execution failed, but not enough evidence is available to separate direct cause from upstream symptom confidently.",
+        "alternative_hypotheses": [
+          {
+            "bug_class": "common_runtime_exception",
+            "reason": "The localized line may be correct and only expose an earlier bad value or state.",
+            "confidence_band": "medium"
+          }
+        ],
+        "direct_cause": "list index out of range",
+        "downstream_symptom": "Execution terminated with an exception before completing the intended flow.",
+        "repair_hints": {
+          "line_number": 2
+        },
+        "execution_mode": "local",
+        "provider_name": null,
+        "model_name": null,
+        "fallback_used": false,
+        "provider_error": null
+      },
+      "patch_result": {
+        "updated_code": "items = [\"debug\", \"trace\"]\nprint(items[3])\n",
+        "patch_diff": "",
+        "changed_regions": [],
+        "patch_summary": "Patch refused",
+        "intended_effect": "Inspect the localized statement and the values reaching it before attempting a patch.",
+        "minimality_flag": "minimal",
+        "confidence_score": 0.1,
+        "refusal_reason": "No conservative patch strategy is available for this diagnosis.",
+        "strategy_id": null,
+        "execution_mode": "local",
+        "provider_name": null,
+        "model_name": null,
+        "fallback_used": false,
+        "provider_error": null
+      },
+      "rerun_execution_result": null,
+      "verifier_result": null,
+      "patch_path": null,
+      "diff_path": null
+    }
+  ],
+  "trace_events_path": "/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_05_runtime_exception/sessions/bug_case_05_runtime_exception_20260425T172419016859Z/trace.jsonl",
+  "final_message": "No conservative patch strategy is available for this diagnosis.",
+  "trace_path": "/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_05_runtime_exception/sessions/bug_case_05_runtime_exception_20260425T172419016859Z/session_state.json",
+  "saved_patch_path": null,
+  "summary_path": "/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_05_runtime_exception/sessions/bug_case_05_runtime_exception_20260425T172419016859Z/summary.md",
+  "failure_summary_path": "/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_05_runtime_exception/sessions/bug_case_05_runtime_exception_20260425T172419016859Z/failure_summary.md",
+  "intermediate_patch_paths": [],
+  "final_decision": "stop",
+  "behavior_match_status": null,
+  "handoff_count": 5
+}

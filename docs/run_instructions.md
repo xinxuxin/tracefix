@@ -150,6 +150,15 @@ Full suite:
 PYTHONPATH=src python3 evaluation/run_evaluation.py
 ```
 
+This writes both timestamped run artifacts under `evaluation/runs/<timestamp>/` and root-level Phase 3 evidence files:
+
+- `evaluation/test_cases.csv`
+- `evaluation/evaluation_results.csv`
+- `evaluation/failure_log.md`
+- `evaluation/baseline_comparison.csv`
+- `evaluation/summary.md`
+- `evaluation/version_notes.md`
+
 Selected cases:
 
 ```bash
