@@ -1,17 +1,32 @@
 # Screenshot Index
 
-Final screenshots should be captured before Phase 3 submission. Until images are added, each row is marked `TODO_FOR_TEAM_CAPTURE`.
+Final screenshots should be captured before Phase 3 submission. Some full-page screenshots are already present, but the final report should still capture the named 4-8 screenshots below from the main page.
+
+Existing full-page captures:
+
+- `tracefix_after_run_full_page_desktop_20260425.png`
+- `tracefix_presentation_mode_full_page_20260426.png`
+- `tracefix_full_page_desktop_20260425.png`
+- `tracefix_full_page_20260425.png`
 
 | Screenshot | Status | Purpose | Suggested source |
 |---|---|---|---|
-| `01_home_or_overview.png` | TODO_FOR_TEAM_CAPTURE | Show TraceFix identity, scope, and system map | Frontend hero / overview |
-| `02_debug_workspace.png` | TODO_FOR_TEAM_CAPTURE | Show sample case loading and code workspace | Frontend Debug Workspace |
-| `03_pipeline_handoff.png` | TODO_FOR_TEAM_CAPTURE | Show Controller/Executor/Diagnoser/Patcher/Verifier handoff flow | Frontend Pipeline View after a run |
-| `04_trace_timeline.png` | TODO_FOR_TEAM_CAPTURE | Show inspectable trace events and payload detail | Frontend Session Explorer / Trace timeline |
-| `05_patch_diff.png` | TODO_FOR_TEAM_CAPTURE | Show original vs patched code or unified diff | Frontend Session Explorer / Patch diff |
-| `06_verification_result.png` | TODO_FOR_TEAM_CAPTURE | Show accept/stop/escalate rationale and behavior indicators | Frontend Verification Result panel |
-| `07_evaluation_dashboard.png` | TODO_FOR_TEAM_CAPTURE | Show 7-case evaluation summary and results table | Frontend Evaluation Dashboard |
-| `08_failure_case.png` | TODO_FOR_TEAM_CAPTURE | Show failure/governance story cards | Frontend Failure Analysis section |
+| `01_home_or_overview.png` | MANUAL_REQUIRED | Show TraceFix identity, scope, system map, and video roadmap | `/` hero and `#demo-roadmap` |
+| `02_debug_workspace.png` | MANUAL_REQUIRED | Show happy-path code and run action | `/#workspace` |
+| `03_pipeline_handoff.png` | MANUAL_REQUIRED | Show Controller/Executor/Diagnoser/Patcher/Verifier handoff flow | `/#session-story` |
+| `04_trace_timeline.png` | MANUAL_REQUIRED | Show inspectable trace events and payload detail | `/#explorer` trace tab |
+| `05_patch_diff.png` | MANUAL_REQUIRED | Show original vs patched code or unified diff | `/#explorer` diff tab |
+| `06_verification_result.png` | MANUAL_REQUIRED | Show accept/stop/escalate rationale and behavior indicators | `/#session-story` |
+| `07_evaluation_dashboard.png` | MANUAL_REQUIRED | Show 7-case evaluation summary and results table | `/#evaluation` |
+| `08_failure_case.png` | MANUAL_REQUIRED | Show failure/governance story cards | `/#evaluation` failure cards |
+
+## Capture Instructions
+
+1. Start the local visual server: `PYTHONPATH=src python -m tracefix visual-server --port 8123`.
+2. Open `http://127.0.0.1:8123/`.
+3. Click `Run TraceFix` for `bug_case_02_name_error`.
+4. Capture 4 to 8 screenshots using the filenames above.
+5. Keep captions below aligned with the final report or slide deck.
 
 ## Captions
 

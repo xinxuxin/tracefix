@@ -1,0 +1,10 @@
+--- before.py
++++ after.py
+@@ -1,6 +1,6 @@
+ def announce_total():
+     totla = 17
+-    print(total)
++    print(totla)
+ 
+ 
+ announce_total()

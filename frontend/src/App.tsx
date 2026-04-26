@@ -331,6 +331,61 @@ function App() {
     },
   ];
 
+  const demoRunOfShow = [
+    {
+      time: "0:00-0:30",
+      title: "Problem and target user",
+      action: "Start at the hero and Demo Roadmap. Explain that TraceFix helps Python learners judge whether a patch restores behavior, not just whether a crash disappeared.",
+    },
+    {
+      time: "0:30-1:10",
+      title: "Architecture",
+      action: "Point to the system strip and pipeline cards: Controller, Executor, Diagnoser, Patcher, Verifier, with session state and local artifacts.",
+    },
+    {
+      time: "1:10-2:30",
+      title: "Main workflow",
+      action: "Use the workspace with bug_case_02_name_error.py, expected output 10.70, then click Run TraceFix and show the end-to-end flow.",
+    },
+    {
+      time: "2:30-3:20",
+      title: "Evidence layer",
+      action: "Open Session Explorer tabs for trace timeline, patch diff, retry attempts, and artifacts. These are the source-of-truth evidence surfaces.",
+    },
+    {
+      time: "3:20-4:20",
+      title: "Boundary behavior",
+      action: "Use Failure Analysis to show superficial-fix rejection and ambiguous/no-oracle escalation instead of false success.",
+    },
+    {
+      time: "4:20-5:00",
+      title: "Evaluation and final output",
+      action: "End on Evaluation Dashboard and Final Output & Evidence Package to show seven cases, artifacts, limitations, and what to submit.",
+    },
+  ];
+
+  const officialCoverage = [
+    { requirement: "Problem and target user", location: "Hero + Demo Roadmap", status: "PASS" },
+    { requirement: "Architecture", location: "System Strip + Pipeline View", status: "PASS" },
+    { requirement: "Main workflow beginning to end", location: "Debug Workspace + Pipeline + Verification", status: "PASS" },
+    { requirement: "Coordination / branching / agent interaction", location: "Pipeline View + Trace Timeline + Retry Attempts", status: "PASS" },
+    { requirement: "Evidence layer: logs, traces, outputs, artifacts", location: "Session Explorer tabs + Artifact cards", status: "PASS" },
+    { requirement: "Failure, limitation, or boundary behavior", location: "Failure Analysis cards", status: "PASS" },
+    { requirement: "Final output, artifact, or export", location: "Final Output & Evidence Package", status: "PASS" },
+    { requirement: "Mostly actual project, not slides", location: "Interactive local frontend backed by API/artifacts", status: "PASS" },
+  ];
+
+  const finalEvidenceItems = [
+    { label: "Latest evaluation run", value: evaluation?.latestRunPath ?? "evaluation/runs/20260425T180442Z" },
+    { label: "Root evaluation CSV", value: "evaluation/evaluation_results.csv" },
+    { label: "Failure log", value: "evaluation/failure_log.md" },
+    { label: "Trace JSONL", value: session?.artifacts.tracePath ?? "Run a session to populate trace.jsonl" },
+    { label: "Session state", value: session?.artifacts.stateSnapshotPath ?? "Run a session to populate session_state.json" },
+    { label: "Final patch", value: session?.artifacts.finalPatchPath ?? "Accepted sessions save final_patched_script.py" },
+    { label: "Final report draft", value: "docs/final_report_draft.md" },
+    { label: "Submission checklist", value: "docs/phase3_submission_checklist.md" },
+  ];
+
   return (
     <div className="min-h-screen bg-app-shell px-4 py-5 text-slate-900 sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-[1440px] flex-col gap-6">
@@ -448,6 +503,32 @@ function App() {
         </motion.header>
 
         <StickySessionBar loading={loading} session={session} decisionTone={decisionTone} />
+
+        <motion.section id="demo-roadmap" {...sectionMotion} className="panel-grid lg:grid-cols-[0.9fr_1.1fr]">
+          <Panel
+            eyebrow="Main Page Video Roadmap"
+            title="Record the Phase 3 video from this page"
+            subtitle="The main page now carries the official five-minute story: problem, architecture, workflow, evidence, boundary case, evaluation, and final artifacts."
+          >
+            <div className="grid gap-3">
+              {demoRunOfShow.map((step, index) => (
+                <DemoStepCard key={step.time} step={step} index={index} />
+              ))}
+            </div>
+          </Panel>
+
+          <Panel
+            eyebrow="Official Requirement Coverage"
+            title="Everything the video needs is visible on the main page"
+            subtitle="Use this as a quick pre-recording checklist. It maps each official Phase 3 video requirement to an actual main-page section."
+          >
+            <div className="grid gap-3">
+              {officialCoverage.map((item) => (
+                <CoverageCard key={item.requirement} requirement={item.requirement} location={item.location} status={item.status} />
+              ))}
+            </div>
+          </Panel>
+        </motion.section>
 
         {error ? (
           <div className="rounded-3xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 shadow-sm">
@@ -1171,6 +1252,37 @@ function App() {
             </div>
           </Panel>
         </motion.section>
+
+        <motion.section id="final-output" {...sectionMotion}>
+          <Panel
+            eyebrow="Final Output & Evidence Package"
+            title="Submission-ready artifacts from the actual project"
+            subtitle="Use this final section to close the video with concrete outputs: evaluation files, traces, session state, patches, report materials, and the honest manual items that still require a human."
+          >
+            <div className="grid gap-5">
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                {finalEvidenceItems.map((item) => (
+                  <CopyValueCard key={item.label} label={item.label} value={item.value} onCopy={copyText} copiedKey={copiedKey} />
+                ))}
+              </div>
+
+              <div className="grid gap-4 lg:grid-cols-3">
+                <InfoStack title="Final contribution">
+                  TraceFix demonstrates a bounded, auditable multi-component debugging workflow: execute the script,
+                  diagnose the failure, generate a minimal patch, rerun the program, verify behavior, and save evidence.
+                </InfoStack>
+                <InfoStack title="Honest limitations">
+                  The scope is intentionally narrow: single-file Python scripts, beginner-to-intermediate bug classes,
+                  bounded retries, local artifacts, and a lightweight course sandbox rather than a hardened security boundary.
+                </InfoStack>
+                <InfoStack title="Manual submission items">
+                  The live video link and final screenshots still require team capture. The frontend shows the material,
+                  but it does not fabricate media, AI logs, or submission links.
+                </InfoStack>
+              </div>
+            </div>
+          </Panel>
+        </motion.section>
       </div>
     </div>
   );
@@ -1196,10 +1308,12 @@ function TopBar(props: {
 
           <nav className="hidden flex-wrap items-center gap-2 lg:flex">
             {[
+              ["#demo-roadmap", "Video Roadmap"],
               ["#workspace", "Workspace"],
               ["#session-story", "Pipeline"],
               ["#explorer", "Explorer"],
               ["#evaluation", "Evaluation"],
+              ["#final-output", "Final Output"],
             ].map(([href, label]) => (
               <a
                 key={href}
@@ -1217,6 +1331,67 @@ function TopBar(props: {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function DemoStepCard(props: {
+  step: { time: string; title: string; action: string };
+  index: number;
+}) {
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ delay: props.index * 0.04, duration: 0.28 }}
+      className="rounded-[24px] border border-slate-200 bg-slate-50 p-4"
+    >
+      <div className="flex flex-wrap items-start gap-3">
+        <span className="rounded-full bg-slate-950 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white">
+          {props.step.time}
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="font-display text-lg font-semibold text-slate-950">{props.step.title}</div>
+          <div className="mt-2 text-sm leading-7 text-slate-600">{props.step.action}</div>
+        </div>
+      </div>
+    </motion.article>
+  );
+}
+
+function CoverageCard(props: { requirement: string; location: string; status: string }) {
+  return (
+    <div className="rounded-[22px] border border-emerald-200 bg-emerald-50 p-4">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <div className="font-display text-base font-semibold text-slate-950">{props.requirement}</div>
+          <div className="mt-2 text-sm leading-6 text-emerald-800">{props.location}</div>
+        </div>
+        <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-800">
+          {props.status}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function CopyValueCard(props: {
+  label: string;
+  value: string;
+  onCopy: (key: string, value: string | null | undefined) => Promise<void>;
+  copiedKey: string;
+}) {
+  const copyKey = `final-${props.label}`;
+  return (
+    <div className="rounded-[22px] border border-slate-200 bg-slate-50 p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">{props.label}</div>
+        <button type="button" onClick={() => void props.onCopy(copyKey, props.value)} className="copy-button">
+          {props.copiedKey === copyKey ? "Copied" : "Copy"}
+        </button>
+      </div>
+      <div className="mt-3 break-all font-mono text-xs leading-6 text-slate-700">{props.value}</div>
     </div>
   );
 }

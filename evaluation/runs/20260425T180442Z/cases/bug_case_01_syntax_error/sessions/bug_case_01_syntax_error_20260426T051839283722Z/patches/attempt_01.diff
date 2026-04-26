@@ -1,0 +1,8 @@
+--- before.py
++++ after.py
+@@ -1,4 +1,4 @@
+-def classify_score(score)
++def classify_score(score):
+     if score >= 90:
+         print("A")
+     elif score >= 80:

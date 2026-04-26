@@ -4,8 +4,8 @@ This document expands the executed failure/governance cases from the final evalu
 
 Evaluation run:
 
-- [evaluation/runs/20260425T172418Z](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z)
-- [evaluation/failure_log.md](/Users/macbook/Desktop/agentic/evaluation/failure_log.md)
+- `evaluation/runs/20260425T180442Z`
+- `evaluation/failure_log.md`
 
 ## failure_01: Unsupported Runtime Exception
 
@@ -22,9 +22,9 @@ Evaluation run:
 
 Evidence:
 
-- [summary.md](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_05_runtime_exception/sessions/bug_case_05_runtime_exception_20260425T172419016859Z/summary.md)
-- [trace.jsonl](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_05_runtime_exception/sessions/bug_case_05_runtime_exception_20260425T172419016859Z/trace.jsonl)
-- [session_state.json](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_05_runtime_exception/sessions/bug_case_05_runtime_exception_20260425T172419016859Z/session_state.json)
+- `evaluation/runs/20260425T180442Z/cases/bug_case_05_runtime_exception/sessions/bug_case_05_runtime_exception_20260425T181721167286Z/summary.md`
+- `evaluation/runs/20260425T180442Z/cases/bug_case_05_runtime_exception/sessions/bug_case_05_runtime_exception_20260425T181721167286Z/trace.jsonl`
+- `evaluation/runs/20260425T180442Z/cases/bug_case_05_runtime_exception/sessions/bug_case_05_runtime_exception_20260425T181721167286Z/session_state.json`
 
 What changed after testing:
 
@@ -46,10 +46,10 @@ What changed after testing:
 
 Evidence:
 
-- [summary.md](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_06_failure_superficial_fix/sessions/bug_case_06_failure_superficial_fix_20260425T172419048519Z/summary.md)
-- [trace.jsonl](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_06_failure_superficial_fix/sessions/bug_case_06_failure_superficial_fix_20260425T172419048519Z/trace.jsonl)
-- [session_state.json](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_06_failure_superficial_fix/sessions/bug_case_06_failure_superficial_fix_20260425T172419048519Z/session_state.json)
-- [attempt_01.diff](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_06_failure_superficial_fix/sessions/bug_case_06_failure_superficial_fix_20260425T172419048519Z/patches/attempt_01.diff)
+- `evaluation/runs/20260425T180442Z/cases/bug_case_06_failure_superficial_fix/sessions/bug_case_06_failure_superficial_fix_20260425T181721204443Z/summary.md`
+- `evaluation/runs/20260425T180442Z/cases/bug_case_06_failure_superficial_fix/sessions/bug_case_06_failure_superficial_fix_20260425T181721204443Z/trace.jsonl`
+- `evaluation/runs/20260425T180442Z/cases/bug_case_06_failure_superficial_fix/sessions/bug_case_06_failure_superficial_fix_20260425T181721204443Z/session_state.json`
+- `evaluation/runs/20260425T180442Z/cases/bug_case_06_failure_superficial_fix/sessions/bug_case_06_failure_superficial_fix_20260425T181721204443Z/patches/attempt_01.diff`
 
 What changed after testing:
 
@@ -72,10 +72,10 @@ What changed after testing:
 
 Evidence:
 
-- [summary.md](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_07_failure_ambiguous_behavior/sessions/bug_case_07_failure_ambiguous_behavior_20260425T172419111520Z/summary.md)
-- [trace.jsonl](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_07_failure_ambiguous_behavior/sessions/bug_case_07_failure_ambiguous_behavior_20260425T172419111520Z/trace.jsonl)
-- [session_state.json](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_07_failure_ambiguous_behavior/sessions/bug_case_07_failure_ambiguous_behavior_20260425T172419111520Z/session_state.json)
-- [attempt_01.diff](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z/cases/bug_case_07_failure_ambiguous_behavior/sessions/bug_case_07_failure_ambiguous_behavior_20260425T172419111520Z/patches/attempt_01.diff)
+- `evaluation/runs/20260425T180442Z/cases/bug_case_07_failure_ambiguous_behavior/sessions/bug_case_07_failure_ambiguous_behavior_20260425T181721266488Z/summary.md`
+- `evaluation/runs/20260425T180442Z/cases/bug_case_07_failure_ambiguous_behavior/sessions/bug_case_07_failure_ambiguous_behavior_20260425T181721266488Z/trace.jsonl`
+- `evaluation/runs/20260425T180442Z/cases/bug_case_07_failure_ambiguous_behavior/sessions/bug_case_07_failure_ambiguous_behavior_20260425T181721266488Z/session_state.json`
+- `evaluation/runs/20260425T180442Z/cases/bug_case_07_failure_ambiguous_behavior/sessions/bug_case_07_failure_ambiguous_behavior_20260425T181721266488Z/patches/attempt_01.diff`
 
 What changed after testing:
 

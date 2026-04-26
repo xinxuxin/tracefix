@@ -7,7 +7,7 @@ This is a suggested owner plan for final submission. Assignments marked `TODO_FO
 | 5-minute project video | Fan Yang | 3-4 hours | TODO_FOR_TEAM_CONFIRM | TODO_FOR_TEAM | Use frontend demo flow in `docs/frontend_demo_notes.md`. |
 | Final report | Siru Tao | 4-6 hours | TODO_FOR_TEAM_CONFIRM | TODO_FOR_TEAM | Start from `docs/final_report_draft.md`. |
 | Evidence package assembly | Xin Xu | 2-3 hours | TODO_FOR_TEAM_CONFIRM | partial | Evaluation artifacts and docs are generated; screenshots/video still need capture. |
-| Evaluation execution and results | Xin Xu | 1-2 hours | 2026-04-25 | complete | Latest run: `evaluation/runs/20260425T172418Z`. |
+| Evaluation execution and results | Xin Xu | 1-2 hours | 2026-04-25 | complete | Latest run: `evaluation/runs/20260425T180442Z`. |
 | Failure analysis write-ups | Crystal Huang | 2-3 hours | TODO_FOR_TEAM_CONFIRM | partial | Drafts exist in `evaluation/failure_log.md` and `docs/phase3_failure_analysis.md`. |
 | AI usage disclosure | Siru Tao | 1-2 hours | TODO_FOR_TEAM_CONFIRM | partial | `AI_USAGE.md` exists; team-specific tool/version details need confirmation. |
 | Screenshots and frontend demo evidence | Fan Yang | 2-3 hours | TODO_FOR_TEAM_CONFIRM | TODO_FOR_TEAM | Capture 4-8 screenshots listed in `docs/screenshots/screenshot_index.md`. |

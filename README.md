@@ -274,6 +274,12 @@ npm run dev
 http://127.0.0.1:5173
 ```
 
+For the 5-minute Phase 3 recording, use the main page. It now includes the full video roadmap, workflow, evidence, evaluation, and final artifact sections:
+
+```text
+http://127.0.0.1:5173/
+```
+
 Built static mode:
 
 ```bash
@@ -285,6 +291,12 @@ PYTHONPATH=src python -m tracefix visual-server --port 8123
 ```
 
 If `frontend/dist/` exists, `tracefix visual-server` will automatically serve it.
+
+Built main demo URL:
+
+```text
+http://127.0.0.1:8123/
+```
 
 ## How To Run Evaluation
 
@@ -299,7 +311,7 @@ The final Phase 3 evidence run is checked in under:
 - [evaluation/evaluation_results.csv](/Users/macbook/Desktop/agentic/evaluation/evaluation_results.csv)
 - [evaluation/failure_log.md](/Users/macbook/Desktop/agentic/evaluation/failure_log.md)
 - [evaluation/baseline_comparison.csv](/Users/macbook/Desktop/agentic/evaluation/baseline_comparison.csv)
-- [evaluation/runs/20260425T172418Z](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T172418Z)
+- [evaluation/runs/20260425T180442Z](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T180442Z)
 
 Summary of that run:
 

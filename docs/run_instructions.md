@@ -120,6 +120,12 @@ Then open:
 http://127.0.0.1:5173
 ```
 
+For the Phase 3 video path, use the main page:
+
+```text
+http://127.0.0.1:5173/
+```
+
 ## Run the Visual Frontend in Built Static Mode
 
 Build:
@@ -140,6 +146,12 @@ Then open:
 
 ```text
 http://127.0.0.1:8123
+```
+
+For the Phase 3 video path, use the main page:
+
+```text
+http://127.0.0.1:8123/
 ```
 
 ## Run Evaluation

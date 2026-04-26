@@ -242,9 +242,9 @@ def run_selected_cases(
         final_decision = state.final_decision or state.status
         actual_behavior = _actual_behavior(state.status, final_decision, last_rerun)
         latency_seconds = f"{latency_ms / 1000:.3f}"
-        trace_path = state.trace_events_path or ""
-        session_state_path = state.trace_path or ""
-        summary_path = state.summary_path or ""
+        trace_path = _repo_relative(state.trace_events_path)
+        session_state_path = _repo_relative(state.trace_path)
+        summary_path = _repo_relative(state.summary_path)
 
         row = {
             "case_id": case.case_id,
@@ -281,20 +281,21 @@ def run_selected_cases(
     _write_baseline_csv(output_dir / "baseline_comparison.csv", baseline_rows)
     _write_run_summary(output_dir / "run_summary.md", rows)
     _write_version_notes(output_dir / "version_notes.md", output_dir)
-    _write_root_evaluation_files(
-        rows=rows,
-        failure_rows=failure_rows,
-        baseline_rows=baseline_rows,
-        selected_ids=selected_ids,
-        output_dir=output_dir,
-    )
+    if _should_refresh_root_files(output_dir=output_dir, selected_ids=selected_ids):
+        _write_root_evaluation_files(
+            rows=rows,
+            failure_rows=failure_rows,
+            baseline_rows=baseline_rows,
+            selected_ids=selected_ids,
+            output_dir=output_dir,
+        )
     return rows
 
 
 def _write_csv(destination: Path, rows: list[dict[str, str]]) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
     with destination.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=RESULT_COLUMNS)
+        writer = csv.DictWriter(handle, fieldnames=RESULT_COLUMNS, lineterminator="\n")
         writer.writeheader()
         for row in rows:
             writer.writerow(row)
@@ -320,7 +321,7 @@ def _write_test_cases(destination: Path, selected_ids: list[str]) -> None:
         )
     destination.parent.mkdir(parents=True, exist_ok=True)
     with destination.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=TEST_CASE_COLUMNS)
+        writer = csv.DictWriter(handle, fieldnames=TEST_CASE_COLUMNS, lineterminator="\n")
         writer.writeheader()
         for row in rows:
             writer.writerow(row)
@@ -329,7 +330,7 @@ def _write_test_cases(destination: Path, selected_ids: list[str]) -> None:
 def _write_baseline_csv(destination: Path, rows: list[dict[str, str]]) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
     with destination.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=BASELINE_COLUMNS)
+        writer = csv.DictWriter(handle, fieldnames=BASELINE_COLUMNS, lineterminator="\n")
         writer.writeheader()
         for row in rows:
             writer.writerow(row)
@@ -403,7 +404,7 @@ def _write_version_notes(destination: Path, output_dir: Path) -> None:
         "- Evaluation mode: local deterministic TraceFix mode",
         "- Provider mode: local unless the caller explicitly exported provider environment variables before running this script",
         "- Baseline mode: deterministic crash-only acceptance baseline",
-        f"- Run artifact directory: `{output_dir}`",
+        f"- Run artifact directory: `{_repo_relative(output_dir)}`",
         "- Notes: Results are produced by executing the repository evaluation runner, not hand-filled.",
         "",
         "## Configuration Snapshot",
@@ -456,6 +457,27 @@ def _latest_detail_value(attempt_details: list[dict[str, object]], key: str):
         if value is not None:
             return value
     return None
+
+
+def _repo_relative(value: str | Path | None) -> str:
+    if value is None:
+        return ""
+    path = Path(value)
+    try:
+        return path.resolve().relative_to(ROOT).as_posix()
+    except ValueError:
+        return path.as_posix()
+
+
+def _should_refresh_root_files(*, output_dir: Path, selected_ids: list[str]) -> bool:
+    """Only full official evaluation runs should update root-level Phase 3 CSVs."""
+    if selected_ids != list(CASE_SPECS.keys()):
+        return False
+    try:
+        output_dir.resolve().relative_to((ROOT / "evaluation" / "runs").resolve())
+    except ValueError:
+        return False
+    return True
 
 
 def _baseline_row(case: EvaluationCase, state, rerun_result) -> dict[str, str]:

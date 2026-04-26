@@ -1,0 +1,207 @@
+{
+  "session_id": "20260426T051839344652Z",
+  "target_file": "/Users/macbook/Desktop/agentic/cases/bug_case_02_name_error.py",
+  "max_attempts": 2,
+  "timeout_seconds": 2,
+  "status": "fixed",
+  "started_at": "2026-04-26T05:18:39Z",
+  "original_execution": {
+    "command": [
+      "/opt/homebrew/bin/python3.11",
+      "-I",
+      "-B",
+      "bug_case_02_name_error.py"
+    ],
+    "return_code": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"/private/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_n0gda6u7/bug_case_02_name_error.py\", line 6, in <module>\n    checkout_total(10, 0.07)\n  File \"/private/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_n0gda6u7/bug_case_02_name_error.py\", line 3, in checkout_total\n    print(f\"{total:.2f}\")\n             ^^^^^\nNameError: name 'total' is not defined. Did you mean: 'totla'?\n",
+    "timed_out": false,
+    "duration_ms": 26,
+    "exception_type": "NameError",
+    "exception_message": "name 'total' is not defined. Did you mean: 'totla'?",
+    "failure_line": 3,
+    "outcome_label": "runtime_exception",
+    "traceback_text": "Traceback (most recent call last):\n  File \"/private/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_n0gda6u7/bug_case_02_name_error.py\", line 6, in <module>\n    checkout_total(10, 0.07)\n  File \"/private/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_n0gda6u7/bug_case_02_name_error.py\", line 3, in checkout_total\n    print(f\"{total:.2f}\")\n             ^^^^^\nNameError: name 'total' is not defined. Did you mean: 'totla'?\n",
+    "temp_file_path": "/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_n0gda6u7/bug_case_02_name_error.py",
+    "session_id": "20260426T051839344652Z",
+    "used_interpreter": "/opt/homebrew/bin/python3.11",
+    "blocked_reason": null,
+    "policy_notes": [],
+    "expected_output": "10.70\n"
+  },
+  "expected_output": "10.70\n",
+  "session_dir": "evaluation/runs/20260425T180442Z/cases/bug_case_02_name_error/sessions/bug_case_02_name_error_20260426T051839344652Z",
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "diagnosis": {
+        "supported": true,
+        "bug_class": "name_error_typo",
+        "summary": "The undefined name 'total' is likely a typo for the existing identifier 'totla'.",
+        "evidence": [
+          "Outcome label from executor: runtime_exception",
+          "Exception type from executor: NameError",
+          "Exception message from executor: name 'total' is not defined. Did you mean: 'totla'?",
+          "Localized code region: line 3 ->     print(f\"{total:.2f}\")",
+          "Undefined symbol from execution result: total"
+        ],
+        "confidence": 0.9,
+        "line_number": 3,
+        "target_name": "total",
+        "replacement_name": "totla",
+        "stop_reason": null
+      },
+      "patch_candidate": {
+        "strategy": "rename_identifier",
+        "rationale": "Applied rename_identifier using a minimal localized patch.",
+        "patched_source": "def checkout_total(price, tax_rate):\n    totla = price * (1 + tax_rate)\n    print(f\"{totla:.2f}\")\n\n\ncheckout_total(10, 0.07)\n",
+        "changed_lines": [
+          3
+        ]
+      },
+      "verification": {
+        "success": true,
+        "summary": "The original failure is gone and the rerun output matches the expected behavior.",
+        "failure_kind": "accept",
+        "execution_result": {
+          "command": [
+            "/opt/homebrew/bin/python3.11",
+            "-I",
+            "-B",
+            "bug_case_02_name_error.py"
+          ],
+          "return_code": 0,
+          "stdout": "10.70\n",
+          "stderr": "",
+          "timed_out": false,
+          "duration_ms": 31,
+          "exception_type": null,
+          "exception_message": null,
+          "failure_line": null,
+          "outcome_label": "normal_completion",
+          "traceback_text": null,
+          "temp_file_path": "/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_qe0kazkl/bug_case_02_name_error.py",
+          "session_id": "20260426T051839344652Z",
+          "used_interpreter": "/opt/homebrew/bin/python3.11",
+          "blocked_reason": null,
+          "policy_notes": [],
+          "expected_output": "10.70\n"
+        }
+      }
+    }
+  ],
+  "attempt_details": [
+    {
+      "attempt_index": 1,
+      "diagnosis_result": {
+        "primary_bug_class": "name_error",
+        "likely_root_cause": "The undefined name 'total' is likely a typo for the existing identifier 'totla'.",
+        "localized_code_region": {
+          "start_line": 3,
+          "end_line": 3,
+          "snippet": "    print(f\"{total:.2f}\")"
+        },
+        "evidence_summary": [
+          "Outcome label from executor: runtime_exception",
+          "Exception type from executor: NameError",
+          "Exception message from executor: name 'total' is not defined. Did you mean: 'totla'?",
+          "Localized code region: line 3 ->     print(f\"{total:.2f}\")",
+          "Undefined symbol from execution result: total"
+        ],
+        "recommended_repair_direction": "Replace 'total' with 'totla' in the localized statement.",
+        "confidence_score": 0.9,
+        "confidence_band": "high",
+        "uncertainty_notes": "The execution evidence identifies the undefined symbol, but intent is uncertain if several similarly named variables exist.",
+        "alternative_hypotheses": [
+          {
+            "bug_class": "name_error",
+            "reason": "The name may instead be intended as a new variable that should be defined before use.",
+            "confidence_band": "low"
+          }
+        ],
+        "direct_cause": "name 'total' is not defined. Did you mean: 'totla'?",
+        "downstream_symptom": "Execution stopped when Python evaluated the undefined name.",
+        "repair_hints": {
+          "line_number": 3,
+          "target_name": "total",
+          "replacement_name": "totla"
+        },
+        "execution_mode": "local",
+        "provider_name": null,
+        "model_name": null,
+        "fallback_used": false,
+        "provider_error": null
+      },
+      "patch_result": {
+        "updated_code": "def checkout_total(price, tax_rate):\n    totla = price * (1 + tax_rate)\n    print(f\"{totla:.2f}\")\n\n\ncheckout_total(10, 0.07)\n",
+        "patch_diff": "--- before.py\n+++ after.py\n@@ -1,6 +1,6 @@\n def checkout_total(price, tax_rate):\n     totla = price * (1 + tax_rate)\n-    print(f\"{total:.2f}\")\n+    print(f\"{totla:.2f}\")\n \n \n checkout_total(10, 0.07)\n",
+        "changed_regions": [
+          {
+            "start_line": 3,
+            "end_line": 3,
+            "original_snippet": "    print(f\"{total:.2f}\")",
+            "updated_snippet": "    print(f\"{totla:.2f}\")"
+          }
+        ],
+        "patch_summary": "Applied rename_identifier using a minimal localized patch.",
+        "intended_effect": "Replace 'total' with 'totla' in the localized statement.",
+        "minimality_flag": "minimal",
+        "confidence_score": 0.9,
+        "refusal_reason": null,
+        "strategy_id": "rename_identifier",
+        "execution_mode": "local",
+        "provider_name": null,
+        "model_name": null,
+        "fallback_used": false,
+        "provider_error": null
+      },
+      "rerun_execution_result": {
+        "command": [
+          "/opt/homebrew/bin/python3.11",
+          "-I",
+          "-B",
+          "bug_case_02_name_error.py"
+        ],
+        "return_code": 0,
+        "stdout": "10.70\n",
+        "stderr": "",
+        "timed_out": false,
+        "duration_ms": 31,
+        "exception_type": null,
+        "exception_message": null,
+        "failure_line": null,
+        "outcome_label": "normal_completion",
+        "traceback_text": null,
+        "temp_file_path": "/var/folders/3m/f9gg27sn4yd3f3vhrq785kgc0000gn/T/tracefix_exec_qe0kazkl/bug_case_02_name_error.py",
+        "session_id": "20260426T051839344652Z",
+        "used_interpreter": "/opt/homebrew/bin/python3.11",
+        "blocked_reason": null,
+        "policy_notes": [],
+        "expected_output": "10.70\n"
+      },
+      "verifier_result": {
+        "decision": "accept",
+        "rationale": "The original failure is gone and the rerun output matches the expected behavior.",
+        "regression_flags": [],
+        "behavior_match_status": "matched_expected_output",
+        "original_failure_resolved": true,
+        "uncertainty_notes": "Acceptance confidence is strengthened by the explicit output check and a non-broad patch.",
+        "targeted_feedback_for_retry": []
+      },
+      "patch_path": "evaluation/runs/20260425T180442Z/cases/bug_case_02_name_error/sessions/bug_case_02_name_error_20260426T051839344652Z/patches/attempt_01_candidate.py",
+      "diff_path": "evaluation/runs/20260425T180442Z/cases/bug_case_02_name_error/sessions/bug_case_02_name_error_20260426T051839344652Z/patches/attempt_01.diff"
+    }
+  ],
+  "trace_events_path": "evaluation/runs/20260425T180442Z/cases/bug_case_02_name_error/sessions/bug_case_02_name_error_20260426T051839344652Z/trace.jsonl",
+  "final_message": "The original failure is gone and the rerun output matches the expected behavior.",
+  "trace_path": "evaluation/runs/20260425T180442Z/cases/bug_case_02_name_error/sessions/bug_case_02_name_error_20260426T051839344652Z/session_state.json",
+  "saved_patch_path": "evaluation/runs/20260425T180442Z/cases/bug_case_02_name_error/sessions/bug_case_02_name_error_20260426T051839344652Z/final_patched_script.py",
+  "summary_path": "evaluation/runs/20260425T180442Z/cases/bug_case_02_name_error/sessions/bug_case_02_name_error_20260426T051839344652Z/summary.md",
+  "failure_summary_path": null,
+  "intermediate_patch_paths": [
+    "evaluation/runs/20260425T180442Z/cases/bug_case_02_name_error/sessions/bug_case_02_name_error_20260426T051839344652Z/patches/attempt_01_candidate.py"
+  ],
+  "final_decision": "accept",
+  "behavior_match_status": "matched_expected_output",
+  "handoff_count": 9
+}
