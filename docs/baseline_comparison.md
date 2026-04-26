@@ -18,9 +18,9 @@ This is intentionally simple and fair for a local-only repository because it doe
 
 ## Evidence
 
-- [evaluation/baseline_comparison.csv](/Users/macbook/Desktop/agentic/evaluation/baseline_comparison.csv)
-- [evaluation/evaluation_results.csv](/Users/macbook/Desktop/agentic/evaluation/evaluation_results.csv)
-- [evaluation/runs/20260425T180442Z/baseline_comparison.csv](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T180442Z/baseline_comparison.csv)
+- [evaluation/baseline_comparison.csv](evaluation/baseline_comparison.csv)
+- [evaluation/evaluation_results.csv](evaluation/evaluation_results.csv)
+- [evaluation/runs/20260425T180442Z/baseline_comparison.csv](evaluation/runs/20260425T180442Z/baseline_comparison.csv)
 
 ## Results Summary
 

@@ -1,12 +1,17 @@
-TODO_FOR_TEAM_ADD_VIDEO_LINK
+# TraceFix Phase 3 Demo Video
 
-Suggested contents before submission:
-- Final 5-minute demo video URL
-- Date recorded
-- Presenter(s)
-- Cases shown
+Repository video file:
 
-Recommended video sequence:
+- `media/tracefix_phase3_demo.mp4`
+
+Video status:
+
+- Included in repository media folder.
+- Use this file for Canvas upload if the course platform expects a video file.
+- If Canvas requires a hosted URL instead of an uploaded file, upload this MP4 to the team-approved host and paste that URL here before final submission.
+
+Recommended video sequence shown in the recording:
+
 1. Start with the frontend overview and architecture strip.
 2. Load `bug_case_02_name_error` or `bug_case_04_missing_file`.
 3. Run TraceFix and show the pipeline handoffs.

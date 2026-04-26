@@ -9,7 +9,7 @@ Use this checklist immediately before recording the Phase 3 project video.
 - Confirm the top navigation includes `Video Roadmap`, `Workspace`, `Pipeline`, `Explorer`, `Evaluation`, and `Final Output`.
 - Confirm the evaluation dashboard shows 7 cases.
 - Confirm failure cards mention superficial fix and ambiguous behavior.
-- Confirm `media/demo_video_link.txt` is still treated as manual until a real link is pasted.
+- Confirm `media/tracefix_phase3_demo.mp4` exists, or record a replacement video if the team wants a newer take.
 
 ## During Recording
 
@@ -24,8 +24,8 @@ Use this checklist immediately before recording the Phase 3 project video.
 
 ## After Recording
 
-- Upload the video to the team-approved location.
-- Replace `TODO_FOR_TEAM_ADD_VIDEO_LINK` in `media/demo_video_link.txt` with the real URL.
+- Upload `media/tracefix_phase3_demo.mp4` to Canvas or the team-approved location.
+- If Canvas requires a hosted URL, paste that URL into `media/demo_video_link.txt`.
 - Add recording date, presenter(s), and cases shown.
 - Capture 4 to 8 screenshots listed in `docs/screenshots/screenshot_index.md`.
 - Attach exported AI full-response logs under `docs/ai_logs/` if required for submission.

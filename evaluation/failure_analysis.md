@@ -4,9 +4,9 @@ This document summarizes the most important failure modes for the current TraceF
 
 For the final Phase 3 executed failure log, see:
 
-- [failure_log.md](/Users/macbook/Desktop/agentic/evaluation/failure_log.md)
-- [docs/phase3_failure_analysis.md](/Users/macbook/Desktop/agentic/docs/phase3_failure_analysis.md)
-- [runs/20260425T180442Z](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T180442Z)
+- [failure_log.md](evaluation/failure_log.md)
+- [docs/phase3_failure_analysis.md](docs/phase3_failure_analysis.md)
+- [runs/20260425T180442Z](evaluation/runs/20260425T180442Z)
 
 ## Current Failure Modes
 

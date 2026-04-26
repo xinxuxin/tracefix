@@ -1,56 +1,29 @@
 # Final Submission Checklist
 
-Use this checklist to map repository artifacts to likely course submission needs.
-
-For the Phase 3-specific audited checklist, use [phase3_submission_checklist.md](/Users/macbook/Desktop/agentic/docs/phase3_submission_checklist.md).
+Use this lightweight checklist for the final handoff. The audited Phase 3 evidence map is maintained in [phase3_submission_checklist.md](phase3_submission_checklist.md).
 
 ## Core Repository
 
-- [ ] Repository folder is clean, runnable, and pushed to GitHub
-- [ ] [README.md](/Users/macbook/Desktop/agentic/README.md) is current and matches the implemented system
-- [ ] `pyproject.toml`, config example, and run commands are accurate
+- complete: repository is runnable locally with `README.md`, `pyproject.toml`, source code, tests, config example, and frontend run instructions.
+- complete: Phase 3 evaluation CSVs are populated from the latest valid 7-case run.
+- complete: demo MP4 is included at `media/tracefix_phase3_demo.mp4`.
+- manual_required: confirm the final pushed GitHub URL after the last commit.
 
-## Architecture and Design
+## Architecture And Evidence
 
-- [ ] [architecture_overview.md](/Users/macbook/Desktop/agentic/docs/architecture_overview.md) is final
-- [ ] Architecture diagram is exported or screenshotted for the report
-- [ ] Component roles, handoffs, and stopping conditions are clearly described in the report
+- complete: architecture, model/provider policy, state schema, sandbox notes, baseline comparison, and failure analysis are documented.
+- complete: trace/session artifacts exist under `evaluation/runs/20260425T180442Z`.
+- partial: final named screenshots should be captured from the main frontend page using `docs/screenshots/screenshot_index.md`.
 
-## Evaluation
+## Report And Course Materials
 
-- [ ] Evaluation suite has been run with final code
-- [ ] `evaluation_results.csv` from a final run is saved
-- [ ] Best demo cases and best failure-analysis cases are selected
-- [ ] [evaluation_plan.md](/Users/macbook/Desktop/agentic/evaluation/evaluation_plan.md) matches the final evaluation story
-
-## Evidence Artifacts
-
-- [ ] Session traces are saved and inspectable
-- [ ] At least one accepted patch artifact is saved
-- [ ] At least two unresolved or failure cases are saved
-- [ ] Failure log is filled using [failure_log_template.csv](/Users/macbook/Desktop/agentic/evaluation/failure_log_template.csv)
-- [ ] AI usage log is filled using [ai_usage_log_template.md](/Users/macbook/Desktop/agentic/evaluation/ai_usage_log_template.md)
-
-## Screenshots and Video
-
-- [ ] Screenshot inventory is filled using [screenshot_index_template.md](/Users/macbook/Desktop/agentic/docs/screenshot_index_template.md)
-- [ ] CLI run screenshot captured
-- [ ] Trace screenshot captured
-- [ ] Evaluation results screenshot captured
-- [ ] Failure-case screenshot captured
-- [ ] Demo video plan covers one success case and one failure/governance case
-
-## Final Report
-
-- [ ] Problem statement is explicit
-- [ ] User and scope are clearly defined
-- [ ] Why the system is agentic is clearly justified
-- [ ] Architecture, trace evidence, evaluation, and failure analysis sections are complete
-- [ ] Limitations and future work are clearly stated
+- partial: `docs/final_report_draft.md` covers the required sections but should be exported to the final format requested by Canvas.
+- partial: `AI_USAGE.md` and `docs/ai_prompt_appendix.md` are complete disclosure documents; exported full AI conversation logs should be attached under `docs/ai_logs/` if required.
+- manual_required: individual contribution reflections should be added to the final report or the course submission form.
 
 ## Submission Package
 
-- [ ] Final report is included
-- [ ] Video or demo link is included if required
-- [ ] Repository link is correct
-- [ ] Local project folder contains all needed artifacts for backup submission
+- submit: GitHub repository link after final push.
+- submit: final report export generated from `docs/final_report_draft.md`.
+- submit: `media/tracefix_phase3_demo.mp4` or a hosted URL copied into `media/demo_video_link.txt` if Canvas requires a link.
+- submit: screenshot set captured from the main frontend page.

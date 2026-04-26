@@ -2,6 +2,10 @@
 
 TraceFix is a CLI-first course project that demonstrates a narrow, auditable agentic workflow for debugging single-file Python scripts. The system runs buggy code in bounded local execution, diagnoses the observed failure, synthesizes a conservative patch, reruns the patched script, and then verifies whether the result should be accepted, retried, escalated, or stopped. The repository supports two operating styles: a fully local deterministic mode, and an optional API-enhanced mode where the Diagnoser and Patcher can call an external model provider while the Controller, Executor, Verifier, traces, evaluation, and artifacts all remain local and inspectable. This repository also includes an optional local visual frontend that sits on top of the existing controller and saved artifacts so reviewers can inspect handoffs, traces, patch diffs, verifier decisions, and evaluation outcomes without changing the underlying debugging scope.
 
+Team members: Fan Yang, Crystal Huang, Siru Tao, Xin Xu
+
+Selected track: Track A
+
 ## Target User
 
 TraceFix is designed for beginner-to-intermediate Python users who are debugging one small `.py` file at a time and need help understanding a failure without relying on package installation, internet access, or broad autonomous shell behavior.
@@ -51,7 +55,7 @@ Core components:
 - `Frontend` (optional local demo layer)
   - Visualizes agent handoffs, traces, patch diffs, verifier decisions, sample cases, and evaluation outputs.
 
-See [architecture_overview.md](/Users/macbook/Desktop/agentic/docs/architecture_overview.md) for the detailed handoff design.
+See [architecture_overview.md](docs/architecture_overview.md) for the detailed handoff design.
 
 Provider and model policy:
 
@@ -63,7 +67,7 @@ Provider and model policy:
 - provider fallback: local rules when keys, SDKs, requests, or responses fail
 - Verifier remains deterministic-first
 
-See [model_and_provider_policy.md](/Users/macbook/Desktop/agentic/docs/model_and_provider_policy.md) and [state_schema.md](/Users/macbook/Desktop/agentic/docs/state_schema.md).
+See [model_and_provider_policy.md](docs/model_and_provider_policy.md) and [state_schema.md](docs/state_schema.md).
 
 ## Repository Tree
 
@@ -153,12 +157,12 @@ Run tests:
 PYTHONPATH=src python -m unittest discover -s tests -v
 ```
 
-More detailed commands are collected in [run_instructions.md](/Users/macbook/Desktop/agentic/docs/run_instructions.md).
+More detailed commands are collected in [run_instructions.md](docs/run_instructions.md).
 
 ## Environment and Config Notes
 
-- Default runtime settings live in [config/settings.example.json](/Users/macbook/Desktop/agentic/config/settings.example.json).
-- Optional environment variables are documented in [.env.example](/Users/macbook/Desktop/agentic/.env.example).
+- Default runtime settings live in [config/settings.example.json](config/settings.example.json).
+- Optional environment variables are documented in [.env.example](.env.example).
 - The system is local-only and does not require external services.
 - Session artifacts are written per run so that traces are easy to inspect afterward.
 - The frontend is optional and local-only. It is intended for demos, screenshots, and walkthroughs, not as a replacement for the CLI.
@@ -308,10 +312,10 @@ PYTHONPATH=src python3 evaluation/run_evaluation.py
 
 The final Phase 3 evidence run is checked in under:
 
-- [evaluation/evaluation_results.csv](/Users/macbook/Desktop/agentic/evaluation/evaluation_results.csv)
-- [evaluation/failure_log.md](/Users/macbook/Desktop/agentic/evaluation/failure_log.md)
-- [evaluation/baseline_comparison.csv](/Users/macbook/Desktop/agentic/evaluation/baseline_comparison.csv)
-- [evaluation/runs/20260425T180442Z](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T180442Z)
+- [evaluation/evaluation_results.csv](evaluation/evaluation_results.csv)
+- [evaluation/failure_log.md](evaluation/failure_log.md)
+- [evaluation/baseline_comparison.csv](evaluation/baseline_comparison.csv)
+- [evaluation/runs/20260425T180442Z](evaluation/runs/20260425T180442Z)
 
 Summary of that run:
 
@@ -372,21 +376,22 @@ TraceFix is intentionally narrow:
 The optional frontend does not widen the debugging scope. It is only a local visualization and demo surface over the same single-file workflow.
 Optional API enhancement also does not widen the scope. It only changes how Diagnoser and Patcher generate their bounded outputs.
 
-Sandbox note: TraceFix uses a lightweight course sandbox based on temporary working directories, bounded subprocess execution, isolated Python mode, timeout enforcement, and a static policy gate for common out-of-scope patterns. It is not a hardened security boundary for adversarial code. See [governance_and_risks.md](/Users/macbook/Desktop/agentic/docs/governance_and_risks.md) and [executor_notes.md](/Users/macbook/Desktop/agentic/docs/executor_notes.md).
+Sandbox note: TraceFix uses a lightweight course sandbox based on temporary working directories, bounded subprocess execution, isolated Python mode, timeout enforcement, and a static policy gate for common out-of-scope patterns. It is not a hardened security boundary for adversarial code. See [governance_and_risks.md](docs/governance_and_risks.md) and [executor_notes.md](docs/executor_notes.md).
 
 ## Phase 3 Submission Evidence
 
 Key final-submission files:
 
-- [AI_USAGE.md](/Users/macbook/Desktop/agentic/AI_USAGE.md)
-- [docs/ai_prompt_appendix.md](/Users/macbook/Desktop/agentic/docs/ai_prompt_appendix.md)
-- [docs/ai_logs/](/Users/macbook/Desktop/agentic/docs/ai_logs)
-- [docs/final_report_draft.md](/Users/macbook/Desktop/agentic/docs/final_report_draft.md)
-- [docs/phase3_submission_checklist.md](/Users/macbook/Desktop/agentic/docs/phase3_submission_checklist.md)
-- [docs/phase3_validation_report.md](/Users/macbook/Desktop/agentic/docs/phase3_validation_report.md)
-- [docs/phase3_workplan.md](/Users/macbook/Desktop/agentic/docs/phase3_workplan.md)
-- [docs/screenshots/screenshot_index.md](/Users/macbook/Desktop/agentic/docs/screenshots/screenshot_index.md)
-- [media/demo_video_link.txt](/Users/macbook/Desktop/agentic/media/demo_video_link.txt)
+- [AI_USAGE.md](AI_USAGE.md)
+- [docs/ai_prompt_appendix.md](docs/ai_prompt_appendix.md)
+- [docs/ai_logs/](docs/ai_logs)
+- [docs/final_report_draft.md](docs/final_report_draft.md)
+- [docs/phase3_submission_checklist.md](docs/phase3_submission_checklist.md)
+- [docs/phase3_validation_report.md](docs/phase3_validation_report.md)
+- [docs/phase3_workplan.md](docs/phase3_workplan.md)
+- [docs/screenshots/screenshot_index.md](docs/screenshots/screenshot_index.md)
+- [media/demo_video_link.txt](media/demo_video_link.txt)
+- [media/tracefix_phase3_demo.mp4](media/tracefix_phase3_demo.mp4)
 
 ## Known Limitations
 
@@ -403,17 +408,17 @@ Key final-submission files:
 
 Best happy-path demo cases:
 
-- [bug_case_02_name_error.py](/Users/macbook/Desktop/agentic/cases/bug_case_02_name_error.py)
-- [bug_case_04_missing_file.py](/Users/macbook/Desktop/agentic/cases/bug_case_04_missing_file.py)
+- [bug_case_02_name_error.py](cases/bug_case_02_name_error.py)
+- [bug_case_04_missing_file.py](cases/bug_case_04_missing_file.py)
 
 Best retry / governance demos:
 
-- [bug_case_06_failure_superficial_fix.py](/Users/macbook/Desktop/agentic/cases/bug_case_06_failure_superficial_fix.py)
-- [bug_case_07_failure_ambiguous_behavior.py](/Users/macbook/Desktop/agentic/cases/bug_case_07_failure_ambiguous_behavior.py)
+- [bug_case_06_failure_superficial_fix.py](cases/bug_case_06_failure_superficial_fix.py)
+- [bug_case_07_failure_ambiguous_behavior.py](cases/bug_case_07_failure_ambiguous_behavior.py)
 
 Best conservative-stop demo:
 
-- [bug_case_05_runtime_exception.py](/Users/macbook/Desktop/agentic/cases/bug_case_05_runtime_exception.py)
+- [bug_case_05_runtime_exception.py](cases/bug_case_05_runtime_exception.py)
 
 Recommended frontend screenshot path:
 
@@ -424,4 +429,4 @@ Recommended frontend screenshot path:
 - Verifier result panel
 - Evaluation dashboard with the two failure cases visible
 
-See [run_instructions.md](/Users/macbook/Desktop/agentic/docs/run_instructions.md) and [frontend_demo_notes.md](/Users/macbook/Desktop/agentic/docs/frontend_demo_notes.md) for the fastest demo path.
+See [run_instructions.md](docs/run_instructions.md) and [frontend_demo_notes.md](docs/frontend_demo_notes.md) for the fastest demo path.

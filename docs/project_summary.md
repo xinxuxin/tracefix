@@ -49,9 +49,9 @@ The Phase 3 evaluation run executed 7 cases:
 
 Evidence:
 
-- [evaluation/evaluation_results.csv](/Users/macbook/Desktop/agentic/evaluation/evaluation_results.csv)
-- [evaluation/failure_log.md](/Users/macbook/Desktop/agentic/evaluation/failure_log.md)
-- [evaluation/runs/20260425T180442Z](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T180442Z)
+- [evaluation/evaluation_results.csv](evaluation/evaluation_results.csv)
+- [evaluation/failure_log.md](evaluation/failure_log.md)
+- [evaluation/runs/20260425T180442Z](evaluation/runs/20260425T180442Z)
 
 ## Lessons and Next Steps
 

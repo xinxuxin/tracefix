@@ -1,26 +1,26 @@
 # Phase 3 Workplan
 
-This is a suggested owner plan for final submission. Assignments marked `TODO_FOR_TEAM_CONFIRM` should be confirmed by the team before submission.
+This is a suggested owner plan for final submission. Owner names are proposed for coordination and should be confirmed by the team during final packaging.
 
 | Deliverable | Suggested owner | Estimate | Due date | Status | Notes |
 |---|---|---:|---|---|---|
-| 5-minute project video | Fan Yang | 3-4 hours | TODO_FOR_TEAM_CONFIRM | TODO_FOR_TEAM | Use frontend demo flow in `docs/frontend_demo_notes.md`. |
-| Final report | Siru Tao | 4-6 hours | TODO_FOR_TEAM_CONFIRM | TODO_FOR_TEAM | Start from `docs/final_report_draft.md`. |
-| Evidence package assembly | Xin Xu | 2-3 hours | TODO_FOR_TEAM_CONFIRM | partial | Evaluation artifacts and docs are generated; screenshots/video still need capture. |
+| 5-minute project video | Fan Yang | 3-4 hours | Before final submission | complete | Demo MP4 is included at `media/tracefix_phase3_demo.mp4`; use `media/demo_video_link.txt` if a hosted URL is required. |
+| Final report | Siru Tao | 4-6 hours | Before final submission | partial | Draft exists in `docs/final_report_draft.md`; export to the required final format before submission. |
+| Evidence package assembly | Xin Xu | 2-3 hours | Before final submission | partial | Evaluation artifacts, docs, and demo video are present; final named screenshots still need capture. |
 | Evaluation execution and results | Xin Xu | 1-2 hours | 2026-04-25 | complete | Latest run: `evaluation/runs/20260425T180442Z`. |
-| Failure analysis write-ups | Crystal Huang | 2-3 hours | TODO_FOR_TEAM_CONFIRM | partial | Drafts exist in `evaluation/failure_log.md` and `docs/phase3_failure_analysis.md`. |
-| AI usage disclosure | Siru Tao | 1-2 hours | TODO_FOR_TEAM_CONFIRM | partial | `AI_USAGE.md` exists; team-specific tool/version details need confirmation. |
-| Screenshots and frontend demo evidence | Fan Yang | 2-3 hours | TODO_FOR_TEAM_CONFIRM | TODO_FOR_TEAM | Capture 4-8 screenshots listed in `docs/screenshots/screenshot_index.md`. |
-| Final repository cleanup | Xin Xu | 1 hour | TODO_FOR_TEAM_CONFIRM | partial | Remove/ignore local generated folders if needed; verify clean git state before submission. |
-| Individual reflection: Fan Yang | Fan Yang | 30-45 minutes | TODO_FOR_TEAM_CONFIRM | TODO_FOR_TEAM | Include concrete contributions and lessons learned. |
-| Individual reflection: Siru Tao | Siru Tao | 30-45 minutes | TODO_FOR_TEAM_CONFIRM | TODO_FOR_TEAM | Include documentation/report contributions. |
-| Individual reflection: Crystal Huang | Crystal Huang | 30-45 minutes | TODO_FOR_TEAM_CONFIRM | TODO_FOR_TEAM | Include failure-analysis/evaluation review. |
-| Individual reflection: Xin Xu | Xin Xu | 30-45 minutes | TODO_FOR_TEAM_CONFIRM | TODO_FOR_TEAM | Include implementation/evidence package work. |
+| Failure analysis write-ups | Crystal Huang | 2-3 hours | Before final submission | complete | Write-ups exist in `evaluation/failure_log.md` and `docs/phase3_failure_analysis.md`. |
+| AI usage disclosure | Siru Tao | 1-2 hours | Before final submission | partial | `AI_USAGE.md` exists; exported full AI conversation logs still require team attachment if the course requests them. |
+| Screenshots and frontend demo evidence | Fan Yang | 2-3 hours | Before final submission | partial | Full-page captures exist; final named screenshots listed in `docs/screenshots/screenshot_index.md` should be captured for the report. |
+| Final repository cleanup | Xin Xu | 1 hour | Before final submission | partial | Validate git status after final edits and confirm pushed commit. |
+| Individual reflection: Fan Yang | Fan Yang | 30-45 minutes | Before final submission | manual_required | Include concrete contributions and lessons learned in the final report/submission form. |
+| Individual reflection: Siru Tao | Siru Tao | 30-45 minutes | Before final submission | manual_required | Include documentation/report contributions. |
+| Individual reflection: Crystal Huang | Crystal Huang | 30-45 minutes | Before final submission | manual_required | Include failure-analysis/evaluation review. |
+| Individual reflection: Xin Xu | Xin Xu | 30-45 minutes | Before final submission | manual_required | Include implementation/evidence package work. |
 
 ## Suggested Final Sequence
 
 1. Confirm team ownership and due dates.
-2. Capture screenshots and video.
+2. Capture final named screenshots.
 3. Review `AI_USAGE.md` and add missing teammate-specific tool usage.
 4. Convert or export `docs/final_report_draft.md` into the final report format.
 5. Re-run validation commands before submission.
@@ -30,7 +30,7 @@ This is a suggested owner plan for final submission. Assignments marked `TODO_FO
 
 | Risk | Mitigation |
 |---|---|
-| AI usage details are incomplete | Keep `TODO_FOR_TEAM` markers visible until teammates confirm. |
-| Screenshots are missing | Use `docs/screenshots/screenshot_index.md` as a capture checklist. |
-| Video link is missing | Fill `media/demo_video_link.txt` before final submission. |
+| Full AI response exports are missing | Attach exported conversations under `docs/ai_logs/` if the course grader requires the full responses. |
+| Final named screenshots are not all present | Use `docs/screenshots/screenshot_index.md` as a capture checklist. |
+| Hosted video URL may be required | `media/tracefix_phase3_demo.mp4` is included; if Canvas requires a hosted link, paste it in `media/demo_video_link.txt`. |
 | Evaluation results become stale after code changes | Re-run `PYTHONPATH=src python3 evaluation/run_evaluation.py`. |

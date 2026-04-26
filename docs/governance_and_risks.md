@@ -35,8 +35,8 @@ These boundaries reduce accidental scope expansion and make system behavior easi
 
 TraceFix uses a lightweight course sandbox implemented in:
 
-- [src/tracefix/sandbox/executor.py](/Users/macbook/Desktop/agentic/src/tracefix/sandbox/executor.py)
-- [src/tracefix/sandbox/policy.py](/Users/macbook/Desktop/agentic/src/tracefix/sandbox/policy.py)
+- [src/tracefix/sandbox/executor.py](src/tracefix/sandbox/executor.py)
+- [src/tracefix/sandbox/policy.py](src/tracefix/sandbox/policy.py)
 
 What is enforced in code:
 

@@ -16,8 +16,6 @@ outputs/sessions/
 evaluation/runs/
 !evaluation/runs/
 evaluation/runs/*
-!evaluation/runs/20260425T172418Z/
-!evaluation/runs/20260425T172418Z/**
 !evaluation/runs/20260425T180442Z/
 !evaluation/runs/20260425T180442Z/**
 frontend/node_modules/

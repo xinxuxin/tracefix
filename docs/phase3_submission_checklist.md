@@ -8,7 +8,7 @@ Validation date: 2026-04-26
 | Runnable repository instructions | complete | Xin Xu | `README.md`, `docs/run_instructions.md` | None. |
 | Final artifact | complete | Xin Xu | Repository source and generated evaluation artifacts | None for code artifact. |
 | Final presentation/demo plan | complete | Fan Yang | `docs/frontend_demo_notes.md`, `docs/demo_script_notes.md`, `docs/project_video_speech_notes.md`, `docs/project_video_storyboard.md` | Use the main page during recording. |
-| 5-minute video or placeholder | MANUAL_REQUIRED | Fan Yang | `media/demo_video_link.txt` | Replace `TODO_FOR_TEAM_ADD_VIDEO_LINK` with the real video link before submission. |
+| 5-minute video artifact | complete | Fan Yang | `media/tracefix_phase3_demo.mp4`, `media/demo_video_link.txt` | None if Canvas accepts uploaded MP4. If Canvas requires a hosted URL, upload this MP4 and paste the URL in `media/demo_video_link.txt`. |
 | Final report draft | partial | Siru Tao | `docs/final_report_draft.md` | Review, polish, and export to required final format if Canvas expects PDF. |
 | Evidence package | complete | Xin Xu | `evaluation/runs/20260425T180442Z` | None. Latest run is included and root CSVs point to it. |
 | At least 5 completed test scenarios | complete | Xin Xu | `evaluation/evaluation_results.csv` | None. 7 executed cases verified. |
@@ -43,4 +43,4 @@ Validation date: 2026-04-26
 
 ## Overall Status
 
-The repository is technically runnable and the evidence package is complete. Final submission is **not fully ready** until the human-owned submission artifacts are added: final named report screenshots, real 5-minute video link, exported full AI response logs, final report export, and individual reflections.
+The repository is technically runnable and the evidence package is complete. A 5-minute demo MP4 is now included in `media/`. Final submission is **not fully ready** until the remaining human-owned submission artifacts are added: final named report screenshots, exported full AI response logs, final report export, and individual reflections.

@@ -4,10 +4,10 @@ TraceFix uses stateless worker components and a stateful controller. The Executo
 
 Primary implementation files:
 
-- [src/tracefix/state.py](/Users/macbook/Desktop/agentic/src/tracefix/state.py)
-- [src/tracefix/types.py](/Users/macbook/Desktop/agentic/src/tracefix/types.py)
-- [src/tracefix/models.py](/Users/macbook/Desktop/agentic/src/tracefix/models.py)
-- [src/tracefix/orchestrator/controller.py](/Users/macbook/Desktop/agentic/src/tracefix/orchestrator/controller.py)
+- [src/tracefix/state.py](src/tracefix/state.py)
+- [src/tracefix/types.py](src/tracefix/types.py)
+- [src/tracefix/models.py](src/tracefix/models.py)
+- [src/tracefix/orchestrator/controller.py](src/tracefix/orchestrator/controller.py)
 
 ## Session State Fields
 
@@ -38,10 +38,10 @@ Primary implementation files:
 
 | Result object | Type file | Written by | Read by | Purpose |
 |---|---|---|---|---|
-| `ExecutionResult` | [src/tracefix/types.py](/Users/macbook/Desktop/agentic/src/tracefix/types.py) | Executor | Diagnoser, Verifier, Controller | Captures stdout, stderr, traceback, timeout, failure line, and outcome label. |
-| `DiagnoserResult` | [src/tracefix/types.py](/Users/macbook/Desktop/agentic/src/tracefix/types.py) | Diagnoser | Patcher, Controller, Frontend | Captures bug class, root-cause hypothesis, localized region, repair hints, confidence, provider metadata. |
-| `PatcherResult` | [src/tracefix/types.py](/Users/macbook/Desktop/agentic/src/tracefix/types.py) | Patcher | Executor rerun, Verifier, Controller | Captures updated code, diff, changed regions, strategy, minimality, confidence, provider metadata. |
-| `VerifierResult` | [src/tracefix/types.py](/Users/macbook/Desktop/agentic/src/tracefix/types.py) | Verifier | Controller, Frontend, Evaluation | Captures decision, rationale, regression flags, behavior match, retry feedback. |
+| `ExecutionResult` | [src/tracefix/types.py](src/tracefix/types.py) | Executor | Diagnoser, Verifier, Controller | Captures stdout, stderr, traceback, timeout, failure line, and outcome label. |
+| `DiagnoserResult` | [src/tracefix/types.py](src/tracefix/types.py) | Diagnoser | Patcher, Controller, Frontend | Captures bug class, root-cause hypothesis, localized region, repair hints, confidence, provider metadata. |
+| `PatcherResult` | [src/tracefix/types.py](src/tracefix/types.py) | Patcher | Executor rerun, Verifier, Controller | Captures updated code, diff, changed regions, strategy, minimality, confidence, provider metadata. |
+| `VerifierResult` | [src/tracefix/types.py](src/tracefix/types.py) | Verifier | Controller, Frontend, Evaluation | Captures decision, rationale, regression flags, behavior match, retry feedback. |
 
 ## Write Permissions
 

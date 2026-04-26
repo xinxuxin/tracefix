@@ -11,14 +11,14 @@ The codebase is runnable, backend tests pass, the CLI works, the evaluation runn
 Main blockers:
 
 - Final named report screenshots still need capture from the main page.
-- `media/demo_video_link.txt` still contains `TODO_FOR_TEAM_ADD_VIDEO_LINK`.
+- A 5-minute demo MP4 is now included under `media/`.
 - Full exported AI response logs are not present under `docs/ai_logs/`.
 - Final report draft exists, but final PDF/export and individual reflections still require team completion.
 
 Manual actions required:
 
 - Capture the final named 4 to 8 screenshots listed in `docs/screenshots/screenshot_index.md`.
-- Record/upload the 5-minute video and update `media/demo_video_link.txt`.
+- Upload `media/tracefix_phase3_demo.mp4` to Canvas or the team-approved host if a URL is required.
 - Add exported full AI response logs to `docs/ai_logs/`.
 - Finalize/export the report and add individual contribution reflections.
 
@@ -107,8 +107,8 @@ Manual actions required:
 
 | Requirement | Status | Evidence checked | Notes |
 |---|---|---|---|
-| Video placeholder exists | PASS | `media/demo_video_link.txt` | Placeholder exists. |
-| Real video link exists | MANUAL_REQUIRED | `media/demo_video_link.txt` | File still contains `TODO_FOR_TEAM_ADD_VIDEO_LINK`. |
+| Video artifact exists | PASS | `media/tracefix_phase3_demo.mp4`, `media/demo_video_link.txt` | Supplied MP4 is included and documented. |
+| Hosted video URL exists | PARTIAL | `media/demo_video_link.txt` | MP4 is included locally; add hosted URL only if Canvas requires a URL instead of file upload. |
 | Demo script notes exist | PASS | `docs/demo_script_notes.md`, `docs/project_video_speech_notes.md`, `docs/project_video_storyboard.md`, `docs/demo_click_path.md` | 5-minute speech notes, storyboard, and click path present. |
 | Happy-path case exists | PASS | `cases/bug_case_02_name_error.py`, evaluation artifacts | Runnable and evaluated. |
 | Failure/boundary case exists | PASS | `cases/bug_case_06_failure_superficial_fix.py`, `cases/bug_case_07_failure_ambiguous_behavior.py` | Runnable/evaluated failure cases. |
@@ -143,7 +143,7 @@ Manual actions required:
 | Architecture includes model/provider assignments and temperatures | PASS | Documents default mode, OpenAI/Anthropic options, model names, temperature `0.0`, max tokens, fallback. | `docs/architecture_overview.md`, `docs/model_and_provider_policy.md`, `src/tracefix/config.py` |
 | State schema formalized and linked to code | PASS | State fields, types, writers/readers, persistence, and code links present. | `docs/state_schema.md` |
 | Sandbox enforcement documented and backed by code/tests | PASS | Lightweight sandbox docs plus policy/executor tests. | `docs/governance_and_risks.md`, `docs/executor_notes.md`, `tests/test_executor.py` |
-| Frontend has screenshot/demo evidence | PARTIAL | Demo docs exist; actual screenshot files are missing. | `docs/frontend_demo_notes.md`, `docs/screenshots/screenshot_index.md` |
+| Frontend has screenshot/demo evidence | PARTIAL | Demo docs and full-page screenshots exist; final named 4-8 report screenshots should still be captured. | `docs/frontend_demo_notes.md`, `docs/screenshots/screenshot_index.md`, `docs/screenshots/` |
 | Frontend builds successfully | PASS | `npm run build` passed. | `frontend/dist/` |
 | Main page video roadmap exists | PASS | `/` route and source file exist. | `frontend/src/App.tsx` |
 | Main page shows problem/user | PASS | Hero and roadmap show problem, target user, scope boundaries. | `frontend/src/App.tsx` |
@@ -166,7 +166,7 @@ Manual actions required:
 | Project video content outline exists | PASS | 5-minute outline exists. | `docs/demo_script_notes.md` |
 | Demo script exists | PASS | Speech notes and storyboard exist. | `docs/project_video_speech_notes.md`, `docs/project_video_storyboard.md` |
 | Click path exists | PASS | Recording click path and fallback CLI path exist. | `docs/demo_click_path.md` |
-| Real project video link exists | MANUAL_REQUIRED | Placeholder exists but real link is absent. | `media/demo_video_link.txt` |
+| Real project video artifact exists | PASS | MP4 file exists in repository media folder. | `media/tracefix_phase3_demo.mp4`, `media/demo_video_link.txt` |
 | Baseline comparison exists or limitation documented | PASS | Baseline CSV and docs exist. | `evaluation/baseline_comparison.csv`, `docs/baseline_comparison.md` |
 | Phase 3 deliverables have named owners | PARTIAL | Suggested owners exist; due dates/ownership should be confirmed by team. | `docs/phase3_workplan.md`, `docs/phase3_submission_checklist.md` |
 | Final report draft covers required sections | PASS | Required sections are present. | `docs/final_report_draft.md` |
@@ -178,7 +178,7 @@ Manual actions required:
 
 ### Critical
 
-- Add the real 5-minute project video link to `media/demo_video_link.txt`.
+- Upload `media/tracefix_phase3_demo.mp4` to Canvas or paste a hosted URL in `media/demo_video_link.txt` if required by the submission form.
 - Capture and add the final named 4 to 8 report screenshot files under `docs/screenshots/`.
 - Add exported full AI response logs under `docs/ai_logs/`, or submit them through the course platform if repository upload is not appropriate.
 
@@ -200,4 +200,4 @@ Manual actions required:
 
 Recommendation: **Do not submit yet.**
 
-The repository is technically runnable and evidence-complete, but the final package is not submission-complete until the manual artifacts are added. Submit after adding the real video link, screenshots, AI full-response logs, final report export, and individual reflections.
+The repository is technically runnable and evidence-complete, and the demo MP4 is included. Submit after adding final named screenshots, AI full-response logs, final report export, and individual reflections. If Canvas requires a hosted video URL instead of file upload, upload `media/tracefix_phase3_demo.mp4` and paste the URL in `media/demo_video_link.txt`.

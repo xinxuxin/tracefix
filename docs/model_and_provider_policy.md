@@ -12,7 +12,7 @@ TraceFix is local-first. External model providers are optional enhancements for 
 | LLM Verifier assist enabled | `false` |
 | Fallback on provider error | `true` |
 
-Defaults are defined in [src/tracefix/config.py](/Users/macbook/Desktop/agentic/src/tracefix/config.py) and mirrored in [config/settings.example.json](/Users/macbook/Desktop/agentic/config/settings.example.json).
+Defaults are defined in [src/tracefix/config.py](src/tracefix/config.py) and mirrored in [config/settings.example.json](config/settings.example.json).
 
 ## Component Assignments
 
@@ -77,8 +77,8 @@ Fallback behavior is recorded in:
 
 Provider prompts live in:
 
-- [src/tracefix/prompts/diagnoser_prompt.txt](/Users/macbook/Desktop/agentic/src/tracefix/prompts/diagnoser_prompt.txt)
-- [src/tracefix/prompts/patcher_prompt.txt](/Users/macbook/Desktop/agentic/src/tracefix/prompts/patcher_prompt.txt)
+- [src/tracefix/prompts/diagnoser_prompt.txt](src/tracefix/prompts/diagnoser_prompt.txt)
+- [src/tracefix/prompts/patcher_prompt.txt](src/tracefix/prompts/patcher_prompt.txt)
 
 Provider outputs must be JSON objects. TraceFix extracts and coerces provider JSON into typed local dataclasses before continuing. The provider does not receive authority to change retry policy, verification acceptance, sandbox scope, or final session status.
 

@@ -1,6 +1,6 @@
 # Screenshot Evidence
 
-This folder tracks final screenshot evidence for Phase 3 submission. Screenshot image files are not yet captured in this repository; placeholders are listed in [screenshot_index.md](/Users/macbook/Desktop/agentic/docs/screenshots/screenshot_index.md) and marked `TODO_FOR_TEAM_CAPTURE`.
+This folder tracks final screenshot evidence for Phase 3 submission. Several full-page screenshots are already present, and [screenshot_index.md](screenshot_index.md) lists the final named 4-8 screenshots recommended for the report or slide deck.
 
 Recommended capture flow:
 

@@ -42,7 +42,7 @@ The style direction is now cooler, sharper, and more dashboard-like rather than 
 
 ## Best Screenshot Sections
 
-Track screenshot capture status in [docs/screenshots/screenshot_index.md](/Users/macbook/Desktop/agentic/docs/screenshots/screenshot_index.md).
+Track screenshot capture status in [docs/screenshots/screenshot_index.md](docs/screenshots/screenshot_index.md).
 
 Best architecture / system screenshots:
 

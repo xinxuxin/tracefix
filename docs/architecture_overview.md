@@ -142,12 +142,12 @@ TraceFix defaults to deterministic local mode. Optional provider mode is limited
 
 | Component | Default mode | Optional provider mode | Config / implementation |
 |---|---|---|---|
-| Controller | local deterministic | none | [src/tracefix/orchestrator/controller.py](/Users/macbook/Desktop/agentic/src/tracefix/orchestrator/controller.py) |
-| Executor | local deterministic | none | [src/tracefix/sandbox/executor.py](/Users/macbook/Desktop/agentic/src/tracefix/sandbox/executor.py) |
-| Diagnoser | local rules | OpenAI or Anthropic when `enable_llm_diagnoser=true` | [src/tracefix/agents/diagnoser_agent.py](/Users/macbook/Desktop/agentic/src/tracefix/agents/diagnoser_agent.py) |
-| Patcher | local rules/templates | OpenAI or Anthropic when `enable_llm_patcher=true` | [src/tracefix/agents/patcher_agent.py](/Users/macbook/Desktop/agentic/src/tracefix/agents/patcher_agent.py) |
-| Verifier | local deterministic | config flag reserved for future assist; current verifier remains rules-first | [src/tracefix/agents/verifier_agent.py](/Users/macbook/Desktop/agentic/src/tracefix/agents/verifier_agent.py) |
-| Frontend | local visualization | none | [src/tracefix/visual_api.py](/Users/macbook/Desktop/agentic/src/tracefix/visual_api.py), [frontend/src/App.tsx](/Users/macbook/Desktop/agentic/frontend/src/App.tsx) |
+| Controller | local deterministic | none | [src/tracefix/orchestrator/controller.py](src/tracefix/orchestrator/controller.py) |
+| Executor | local deterministic | none | [src/tracefix/sandbox/executor.py](src/tracefix/sandbox/executor.py) |
+| Diagnoser | local rules | OpenAI or Anthropic when `enable_llm_diagnoser=true` | [src/tracefix/agents/diagnoser_agent.py](src/tracefix/agents/diagnoser_agent.py) |
+| Patcher | local rules/templates | OpenAI or Anthropic when `enable_llm_patcher=true` | [src/tracefix/agents/patcher_agent.py](src/tracefix/agents/patcher_agent.py) |
+| Verifier | local deterministic | config flag reserved for future assist; current verifier remains rules-first | [src/tracefix/agents/verifier_agent.py](src/tracefix/agents/verifier_agent.py) |
+| Frontend | local visualization | none | [src/tracefix/visual_api.py](src/tracefix/visual_api.py), [frontend/src/App.tsx](frontend/src/App.tsx) |
 
 Configured defaults:
 
@@ -167,7 +167,7 @@ If API keys, SDKs, or provider responses are unavailable, TraceFix records fallb
 - `fallback_used`
 - `provider_error`
 
-See [model_and_provider_policy.md](/Users/macbook/Desktop/agentic/docs/model_and_provider_policy.md) for the central provider policy.
+See [model_and_provider_policy.md](docs/model_and_provider_policy.md) for the central provider policy.
 
 ## Handoffs
 
@@ -231,7 +231,7 @@ The primary memory object is the controller session state. It stores:
 
 This state is persisted to `session_state.json` so the run can be inspected after the fact.
 
-The formal state schema and write permissions are documented in [state_schema.md](/Users/macbook/Desktop/agentic/docs/state_schema.md). In short:
+The formal state schema and write permissions are documented in [state_schema.md](docs/state_schema.md). In short:
 
 - Executor writes execution evidence.
 - Diagnoser writes diagnosis results.

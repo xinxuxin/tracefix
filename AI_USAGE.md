@@ -10,10 +10,11 @@
 | Team members | Siru Tao, Xin Xu, Fan Yang, Crystal Huang |
 | AI usage disclosure owner | Xin Xu |
 | Reviewers | Siru Tao, Fan Yang, Crystal Huang |
+| Disclosure scope | Phases 1-3 (scoping/canvas; architecture/prototype/evaluation plan; final submission package) |
 
 ## 2. Purpose of Disclosure
 
-This disclosure explains how the TraceFix team used AI tools while planning, building, documenting, evaluating, and preparing the Phase 3 submission package. AI tools were used as assistants for project comparison, scoping, architecture drafting, coding support, frontend design support, evaluation planning, failure-analysis wording, README/report planning, and compliance checking.
+This disclosure explains how the TraceFix team used AI tools while planning, building, documenting, evaluating, and preparing the Phase 1, Phase 2, and Phase 3 course deliverables and submission materials. AI tools were used as assistants for project comparison, scoping, architecture drafting, coding support, frontend design support, evaluation planning, failure-analysis wording, README/report planning, and compliance checking.
 
 The team remained responsible for final project direction, final scope boundaries, architecture approval, code review, running actual tests and evaluation cases, checking trace/session artifacts, selecting screenshots, final video recording, and final submission decisions.
 
@@ -47,6 +48,8 @@ What AI helped generate:
 - arguments for choosing Track A technical build
 - early problem framing for a single-file Python debugging assistant
 - explanations of why a multi-component debugging workflow could count as agentic
+- draft wording for the one-paragraph project summary and scoping/justification narrative used in the Phase 1 submission PDF
+- initial drafts of the "multi-agent system canvas" and "agent canvas" descriptions used in the Phase 1 submission, later rewritten and edited by the team
 
 What the team changed manually:
 
@@ -54,6 +57,7 @@ What the team changed manually:
 - constrained the scope to single-file beginner/intermediate Python bugs
 - rejected broader multi-file repository debugging and autonomous shell workflows
 - decided that conservative stopping and verifier authority were core project values
+- edited/reorganized the scoping writeup in the Phase 1 deliverable to match the team's intended scope and evidence boundaries
 
 What the team independently verified:
 
@@ -78,6 +82,8 @@ What AI helped generate:
 - architecture explanation language
 - handoff and state-management documentation
 - suggestions for provider-backed Diagnoser/Patcher modes
+- initial role writeups for Executor/Diagnoser/Patcher/Verifier/Controller used to seed the Agent Canvas in the Phase 1 submission
+- wording drafts for the architecture diagram description, role definitions, and coordination logic narrative included in the Phase 2 report
 
 What the team changed manually:
 
@@ -171,6 +177,7 @@ What AI helped generate:
 - baseline comparison framing
 - suggested CSV columns for Phase 3 evidence
 - narrative language explaining false-positive acceptance risk and no-oracle escalation
+- evaluation plan outline and success metric wording used in the Phase 2 deliverable, later revised based on actual prototype behavior
 
 What the team changed manually:
 
@@ -252,7 +259,7 @@ Actual repository configuration found in `config/settings.example.json` and `src
 | LLM Verifier assist enabled by default | `false` |
 | Fallback to local on provider error | `true` |
 
-The submitted Phase 3 evaluation evidence was produced in local deterministic mode. Optional provider configuration is documented in `docs/model_and_provider_policy.md`.
+Phase 2 prototype demos and the submitted Phase 3 evaluation evidence were produced in local deterministic mode. Optional provider configuration is documented in `docs/model_and_provider_policy.md`.
 
 ## 6. Exact Prompts and Full Responses
 
@@ -283,7 +290,7 @@ Known validation artifacts:
 - `evaluation/evaluation_results.csv`
 - `evaluation/failure_log.md`
 - `evaluation/baseline_comparison.csv`
-- `evaluation/runs/20260425T172418Z/`
+- `evaluation/runs/20260425T180442Z/`
 
 ## 8. AI-Generated Versus Team-Controlled Work
 

@@ -20,9 +20,9 @@ The architecture is intentionally local-first. Optional OpenAI and Anthropic pro
 
 See:
 
-- [docs/architecture_overview.md](/Users/macbook/Desktop/agentic/docs/architecture_overview.md)
-- [docs/model_and_provider_policy.md](/Users/macbook/Desktop/agentic/docs/model_and_provider_policy.md)
-- [docs/state_schema.md](/Users/macbook/Desktop/agentic/docs/state_schema.md)
+- [docs/architecture_overview.md](docs/architecture_overview.md)
+- [docs/model_and_provider_policy.md](docs/model_and_provider_policy.md)
+- [docs/state_schema.md](docs/state_schema.md)
 
 ## Implementation Summary
 
@@ -51,10 +51,10 @@ The final evaluation suite includes 7 single-file Python cases covering:
 
 The runner writes root-level and timestamped artifacts:
 
-- [evaluation/test_cases.csv](/Users/macbook/Desktop/agentic/evaluation/test_cases.csv)
-- [evaluation/evaluation_results.csv](/Users/macbook/Desktop/agentic/evaluation/evaluation_results.csv)
-- [evaluation/failure_log.md](/Users/macbook/Desktop/agentic/evaluation/failure_log.md)
-- [evaluation/runs/20260425T180442Z](/Users/macbook/Desktop/agentic/evaluation/runs/20260425T180442Z)
+- [evaluation/test_cases.csv](evaluation/test_cases.csv)
+- [evaluation/evaluation_results.csv](evaluation/evaluation_results.csv)
+- [evaluation/failure_log.md](evaluation/failure_log.md)
+- [evaluation/runs/20260425T180442Z](evaluation/runs/20260425T180442Z)
 
 ## Results
 
@@ -77,8 +77,8 @@ The most important failure/governance cases are:
 
 See:
 
-- [evaluation/failure_log.md](/Users/macbook/Desktop/agentic/evaluation/failure_log.md)
-- [docs/phase3_failure_analysis.md](/Users/macbook/Desktop/agentic/docs/phase3_failure_analysis.md)
+- [evaluation/failure_log.md](evaluation/failure_log.md)
+- [docs/phase3_failure_analysis.md](docs/phase3_failure_analysis.md)
 
 ## Governance and Safety Reflection
 

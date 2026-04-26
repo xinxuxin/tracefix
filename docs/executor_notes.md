@@ -40,7 +40,7 @@ This executor is deliberately conservative for a course prototype:
 - can block simple out-of-scope behaviors such as network access or subprocess spawning
 - returns structured failure records instead of crashing when execution cannot proceed safely
 
-The policy gate lives in [src/tracefix/sandbox/policy.py](/Users/macbook/Desktop/agentic/src/tracefix/sandbox/policy.py). It currently blocks socket/network imports, subprocess imports, shell execution helpers, dynamic `eval`/`exec`, selected destructive filesystem operations, `shutil`, and direct access to sensitive absolute paths.
+The policy gate lives in [src/tracefix/sandbox/policy.py](src/tracefix/sandbox/policy.py). It currently blocks socket/network imports, subprocess imports, shell execution helpers, dynamic `eval`/`exec`, selected destructive filesystem operations, `shutil`, and direct access to sensitive absolute paths.
 
 ## Structured Logging
 
