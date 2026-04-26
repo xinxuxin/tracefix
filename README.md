@@ -386,6 +386,8 @@ Key final-submission files:
 - [docs/ai_prompt_appendix.md](docs/ai_prompt_appendix.md)
 - [docs/ai_logs/](docs/ai_logs)
 - [docs/final_report_draft.md](docs/final_report_draft.md)
+- [docs/final_report/Phase_3_TraceFix_Final_Report.pdf](docs/final_report/Phase_3_TraceFix_Final_Report.pdf)
+- [docs/final_report/report_quality_check.md](docs/final_report/report_quality_check.md)
 - [docs/phase3_submission_checklist.md](docs/phase3_submission_checklist.md)
 - [docs/phase3_validation_report.md](docs/phase3_validation_report.md)
 - [docs/phase3_workplan.md](docs/phase3_workplan.md)

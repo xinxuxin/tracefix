@@ -1,8 +1,8 @@
 # Screenshot Evidence
 
-This folder tracks final screenshot evidence for Phase 3 submission. Several full-page screenshots are already present, and [screenshot_index.md](screenshot_index.md) lists the final named 4-8 screenshots recommended for the report or slide deck.
+This folder tracks final screenshot evidence for Phase 3 submission. The final report screenshot set is included as seven `.jpg` files, and [screenshot_index.md](screenshot_index.md) maps each image to the report/demo requirement it supports.
 
-Recommended capture flow:
+Reproduction flow for refreshing the screenshots:
 
 1. Start the local visual server: `PYTHONPATH=src python -m tracefix visual-server --port 8123`
 2. Start the frontend dev server from `frontend/`: `npm run dev`

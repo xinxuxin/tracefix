@@ -110,7 +110,7 @@ Do not treat "not found in repository" entries as complete until the team attach
 | Prompt ID | P008 |
 | Tool | OpenAI Codex / coding assistant |
 | Purpose | Add or refine optional provider-backed Diagnoser/Patcher behavior and safe API-key handling. |
-| Exact prompt | The repository conversation contains an exact Chinese follow-up: "把api可以设置为环境变量更安全，如果config里面没有的话运行的时候问一下。不要hardcode也不要把啊api key上传到GitHub，告诉我现在的进度和改动". Earlier full hybrid-provider prompt text was not found in repository files. |
+| Exact prompt | English translation of the repository conversation follow-up: "Make the API key configurable through environment variables for better security. If the config does not contain it, ask at runtime. Do not hardcode the API key and do not upload the API key to GitHub. Tell me the current progress and changes." Earlier full hybrid-provider prompt text was not found in repository files. |
 | Full response location | Full response source: exported AI conversation log to be submitted in `docs/ai_logs/codex_repository_tasks_export.md`. |
 | What the team changed manually afterward | Kept API keys out of config and repository files, preserved local fallback, and documented optional provider behavior. |
 | What the team independently verified | Provider fallback tests and runtime prompt tests. |

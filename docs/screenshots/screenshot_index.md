@@ -1,42 +1,37 @@
 # Screenshot Index
 
-Final screenshots should be captured before Phase 3 submission. Some full-page screenshots are already present, but the final report should still capture the named 4-8 screenshots below from the main page.
+This folder contains the Phase 3 UI and workflow screenshots for TraceFix. These screenshots support the final report by showing the final artifact, main user workflow, evidence layer, evaluation dashboard, failure/boundary cases, and submission-ready outputs.
 
-Existing full-page captures:
+## Final Report Screenshots
+
+| File | Status | Caption |
+|---|---|---|
+| `01_home_landing.jpg` | complete | TraceFix frontend landing screen showing the project purpose, local visual demo layer, component sequence, target user, and scoped debugging workflow. |
+| `02_main_interaction.jpg` | complete | Main workspace where users select a sample case, inspect or paste a single-file Python script, provide expected output, set retry limits, and run TraceFix. |
+| `03_demo_case_controls.jpg` | complete | Quick-load demo scenario controls grouped by happy path, governance, and failure/stop cases, showing settings, controls, and scenario selection for walkthrough and evaluation review. |
+| `04_component_decision_view.jpg` | complete | Component handoff and final decision view showing Controller, Executor, Diagnoser, Patcher, and Verifier outputs for an accepted repair case. |
+| `05_trace_diff_artifacts.jpg` | complete | Session explorer showing trace timeline, patch diff, patch attempts, and artifact tabs used as the evidence layer for post-hoc review. |
+| `06_evaluation_failure_dashboard.jpg` | complete | Evaluation dashboard showing total cases, accepted cases, stopped cases, escalated cases, outcome distribution, and two high-value limitation stories. |
+| `07_final_output_evidence_package.jpg` | complete | Final output and evidence package view showing the latest evaluation run, evaluation results CSV, failure log, trace JSONL, session state, final patch, report draft, and submission checklist. |
+
+## Coverage Of Screenshot Requirements
+
+| Requirement | Covered by |
+|---|---|
+| Home or landing screen | `01_home_landing.jpg` |
+| Main interaction screen | `02_main_interaction.jpg` |
+| Architecture / component handoff view | `04_component_decision_view.jpg` |
+| Evidence, trace, diff, or artifact view | `05_trace_diff_artifacts.jpg` |
+| Evaluation or results screen | `06_evaluation_failure_dashboard.jpg` |
+| Failure or boundary case | `06_evaluation_failure_dashboard.jpg` |
+| Final output, artifact, or export screen | `07_final_output_evidence_package.jpg` |
+| Settings, controls, filters, or sample-case selection | `03_demo_case_controls.jpg` |
+
+## Additional Full-Page Captures
+
+These earlier full-page captures are retained as supplemental evidence:
 
 - `tracefix_after_run_full_page_desktop_20260425.png`
 - `tracefix_presentation_mode_full_page_20260426.png`
 - `tracefix_full_page_desktop_20260425.png`
 - `tracefix_full_page_20260425.png`
-
-| Screenshot | Status | Purpose | Suggested source |
-|---|---|---|---|
-| `01_home_or_overview.png` | MANUAL_REQUIRED | Show TraceFix identity, scope, system map, and video roadmap | `/` hero and `#demo-roadmap` |
-| `02_debug_workspace.png` | MANUAL_REQUIRED | Show happy-path code and run action | `/#workspace` |
-| `03_pipeline_handoff.png` | MANUAL_REQUIRED | Show Controller/Executor/Diagnoser/Patcher/Verifier handoff flow | `/#session-story` |
-| `04_trace_timeline.png` | MANUAL_REQUIRED | Show inspectable trace events and payload detail | `/#explorer` trace tab |
-| `05_patch_diff.png` | MANUAL_REQUIRED | Show original vs patched code or unified diff | `/#explorer` diff tab |
-| `06_verification_result.png` | MANUAL_REQUIRED | Show accept/stop/escalate rationale and behavior indicators | `/#session-story` |
-| `07_evaluation_dashboard.png` | MANUAL_REQUIRED | Show 7-case evaluation summary and results table | `/#evaluation` |
-| `08_failure_case.png` | MANUAL_REQUIRED | Show failure/governance story cards | `/#evaluation` failure cards |
-
-## Capture Instructions
-
-1. Start the local visual server: `PYTHONPATH=src python -m tracefix visual-server --port 8123`.
-2. Open `http://127.0.0.1:8123/`.
-3. Click `Run TraceFix` for `bug_case_02_name_error`.
-4. Capture 4 to 8 screenshots using the filenames above.
-5. Keep captions below aligned with the final report or slide deck.
-
-## Captions
-
-Use these captions in the report or slide deck:
-
-- `01_home_or_overview.png`: TraceFix local visual demo layer showing the bounded multi-component architecture.
-- `02_debug_workspace.png`: Sample-case workspace with optional expected output used as a verifier oracle.
-- `03_pipeline_handoff.png`: Agent handoff visualization for Controller, Executor, Diagnoser, Patcher, and Verifier.
-- `04_trace_timeline.png`: JSONL trace events surfaced as inspectable evidence artifacts.
-- `05_patch_diff.png`: Minimal patch diff generated during a TraceFix run.
-- `06_verification_result.png`: Verifier decision panel showing why a patch was accepted, stopped, or escalated.
-- `07_evaluation_dashboard.png`: Phase 3 evaluation results across seven cases.
-- `08_failure_case.png`: Failure-analysis view showing conservative stopping and no-oracle escalation.

@@ -9,7 +9,7 @@ Validation date: 2026-04-26
 | Final artifact | complete | Xin Xu | Repository source and generated evaluation artifacts | None for code artifact. |
 | Final presentation/demo plan | complete | Fan Yang | `docs/frontend_demo_notes.md`, `docs/demo_script_notes.md`, `docs/project_video_speech_notes.md`, `docs/project_video_storyboard.md` | Use the main page during recording. |
 | 5-minute video artifact | complete | Fan Yang | `media/tracefix_phase3_demo.mp4`, `media/demo_video_link.txt` | None if Canvas accepts uploaded MP4. If Canvas requires a hosted URL, upload this MP4 and paste the URL in `media/demo_video_link.txt`. |
-| Final report draft | partial | Siru Tao | `docs/final_report_draft.md` | Review, polish, and export to required final format if Canvas expects PDF. |
+| Final report | complete | Siru Tao | `docs/final_report/Phase_3_TraceFix_Final_Report.pdf`, `docs/final_report_draft.md` | None. PDF is included; draft remains for edit history. |
 | Evidence package | complete | Xin Xu | `evaluation/runs/20260425T180442Z` | None. Latest run is included and root CSVs point to it. |
 | At least 5 completed test scenarios | complete | Xin Xu | `evaluation/evaluation_results.csv` | None. 7 executed cases verified. |
 | Results for each case | complete | Xin Xu | `evaluation/evaluation_results.csv` | None. Includes actual behavior, decisions, metrics, and artifact paths. |
@@ -31,16 +31,16 @@ Validation date: 2026-04-26
 | Project Video / Demo Evidence: failure/boundary cases | complete | Crystal Huang | `cases/bug_case_06_failure_superficial_fix.py`, `cases/bug_case_07_failure_ambiguous_behavior.py`, `/#evaluation` | None. |
 | Project Video / Demo Evidence: evaluation dashboard | complete | Xin Xu | `evaluation/evaluation_results.csv`, `/#evaluation` | None. |
 | Project Video / Demo Evidence: session artifacts | complete | Xin Xu | `outputs/sessions/`, `evaluation/runs/20260425T180442Z/`, `/#explorer`, `/#final-output` | None. |
-| Frontend evidence docs | partial | Fan Yang | `docs/frontend_demo_notes.md`, `docs/screenshots/screenshot_index.md` | Capture final 4 to 8 named report screenshots from the main page. |
+| Frontend evidence docs | complete | Fan Yang | `docs/frontend_demo_notes.md`, `docs/screenshots/screenshot_index.md`, `docs/screenshots/01_home_landing.jpg` | None. Seven final report screenshots are included. |
 | Frontend build | complete | Xin Xu | `frontend/dist/`, `docs/phase3_validation_report.md` | None. `npm run build` passed. |
 | Visual API / local demo adapter | complete | Xin Xu | `src/tracefix/visual_api.py`, `tests/test_visual_api.py` | None. `/api/health`, `/api/evaluation`, and static index serving were validated locally. |
 | Baseline comparison | complete | Xin Xu | `evaluation/baseline_comparison.csv`, `docs/baseline_comparison.md` | None. Deterministic crash-only baseline documented. |
 | AI usage disclosure | partial | Xin Xu | `AI_USAGE.md`, `docs/ai_prompt_appendix.md`, `docs/ai_logs/` | Attach exported full AI response logs. Current `docs/ai_logs/` contains only README instructions. |
 | Phase 3 owners and estimates | partial | Xin Xu | `docs/phase3_workplan.md` | Team should confirm due dates and suggested ownership. |
-| Individual reflections | MANUAL_REQUIRED | All team members | `docs/phase3_workplan.md` | Add or attach each teammate's individual reflection before submission. |
-| Screenshots | partial | Fan Yang | `docs/screenshots/screenshot_index.md`, `docs/screenshots/tracefix_after_run_full_page_desktop_20260425.png` | Full-page screenshots exist; final named 4-8 screenshot set still needs capture. |
+| Individual reflections | partial | All team members | `docs/final_report/Phase_3_TraceFix_Final_Report.pdf`, Section 9 | Report includes named individual contributions; add separate first-person reflections only if Canvas requires them. |
+| Screenshots | complete | Fan Yang | `docs/screenshots/screenshot_index.md`, `docs/screenshots/01_home_landing.jpg` through `docs/screenshots/07_final_output_evidence_package.jpg` | None. Seven final report screenshots are included. |
 | Validation report | complete | Xin Xu | `docs/phase3_validation_report.md` | None after this audit. |
 
 ## Overall Status
 
-The repository is technically runnable and the evidence package is complete. A 5-minute demo MP4 is now included in `media/`. Final submission is **not fully ready** until the remaining human-owned submission artifacts are added: final named report screenshots, exported full AI response logs, final report export, and individual reflections.
+The repository is technically runnable and the evidence package is complete. The final report PDF, seven screenshots, and 5-minute demo MP4 are included. Remaining submission caveats are external to the runnable artifact: exported full AI response logs should be attached if required, a hosted video URL should be added only if Canvas requires a URL, and separate first-person reflections should be added only if Canvas requires them outside the report.

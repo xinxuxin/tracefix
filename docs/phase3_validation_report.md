@@ -4,23 +4,24 @@ Validation date: 2026-04-26
 
 ## Executive Summary
 
-Ready for final submission? **NO**
+Ready for final submission? **PARTIAL / NEAR READY**
 
-The codebase is runnable, backend tests pass, the CLI works, the evaluation runner produced 7 executed cases, root evaluation CSVs are synchronized with the latest run, the visual API responds, and the frontend production build succeeds. The remaining blockers are human-owned submission artifacts, not core system failures.
+The codebase is runnable, backend tests pass, the CLI works, the evaluation runner produced 7 executed cases, root evaluation CSVs are synchronized with the latest run, the visual API responds, and the frontend production build succeeds. The final report PDF, screenshot evidence set, and demo MP4 are now included.
 
 Main blockers:
 
-- Final named report screenshots still need capture from the main page.
-- A 5-minute demo MP4 is now included under `media/`.
+- No core system blockers remain.
+- A 5-minute demo MP4 is included under `media/`.
+- The final report PDF is included under `docs/final_report/`.
+- Seven final report screenshots are included under `docs/screenshots/`.
 - Full exported AI response logs are not present under `docs/ai_logs/`.
-- Final report draft exists, but final PDF/export and individual reflections still require team completion.
+- Separate first-person individual reflections may still be needed if Canvas requires them outside the report.
 
 Manual actions required:
 
-- Capture the final named 4 to 8 screenshots listed in `docs/screenshots/screenshot_index.md`.
 - Upload `media/tracefix_phase3_demo.mp4` to Canvas or the team-approved host if a URL is required.
 - Add exported full AI response logs to `docs/ai_logs/`.
-- Finalize/export the report and add individual contribution reflections.
+- Add separate first-person individual reflections only if the submission form requires them outside the final report.
 
 ## Commands Run
 
@@ -113,8 +114,8 @@ Manual actions required:
 | Happy-path case exists | PASS | `cases/bug_case_02_name_error.py`, evaluation artifacts | Runnable and evaluated. |
 | Failure/boundary case exists | PASS | `cases/bug_case_06_failure_superficial_fix.py`, `cases/bug_case_07_failure_ambiguous_behavior.py` | Runnable/evaluated failure cases. |
 | Evaluation dashboard data exists | PASS | `/api/evaluation`, `evaluation/evaluation_results.csv` | 7 results available. |
-| Screenshot plan exists | PASS | `docs/screenshots/screenshot_index.md` | Capture list and captions present. |
-| Actual screenshot images exist | PARTIAL | `docs/screenshots/` | Full-page screenshots exist; final named report set remains manual. |
+| Screenshot index exists | PASS | `docs/screenshots/screenshot_index.md` | Seven report screenshots are indexed with captions. |
+| Actual screenshot images exist | PASS | `docs/screenshots/01_home_landing.jpg` through `docs/screenshots/07_final_output_evidence_package.jpg` | Final report screenshot set is present. |
 
 ## Evidence Package Validation
 
@@ -143,7 +144,7 @@ Manual actions required:
 | Architecture includes model/provider assignments and temperatures | PASS | Documents default mode, OpenAI/Anthropic options, model names, temperature `0.0`, max tokens, fallback. | `docs/architecture_overview.md`, `docs/model_and_provider_policy.md`, `src/tracefix/config.py` |
 | State schema formalized and linked to code | PASS | State fields, types, writers/readers, persistence, and code links present. | `docs/state_schema.md` |
 | Sandbox enforcement documented and backed by code/tests | PASS | Lightweight sandbox docs plus policy/executor tests. | `docs/governance_and_risks.md`, `docs/executor_notes.md`, `tests/test_executor.py` |
-| Frontend has screenshot/demo evidence | PARTIAL | Demo docs and full-page screenshots exist; final named 4-8 report screenshots should still be captured. | `docs/frontend_demo_notes.md`, `docs/screenshots/screenshot_index.md`, `docs/screenshots/` |
+| Frontend has screenshot/demo evidence | PASS | Demo docs, seven report screenshots, and supplemental full-page screenshots exist. | `docs/frontend_demo_notes.md`, `docs/screenshots/screenshot_index.md`, `docs/screenshots/` |
 | Frontend builds successfully | PASS | `npm run build` passed. | `frontend/dist/` |
 | Main page video roadmap exists | PASS | `/` route and source file exist. | `frontend/src/App.tsx` |
 | Main page shows problem/user | PASS | Hero and roadmap show problem, target user, scope boundaries. | `frontend/src/App.tsx` |
@@ -169,7 +170,7 @@ Manual actions required:
 | Real project video artifact exists | PASS | MP4 file exists in repository media folder. | `media/tracefix_phase3_demo.mp4`, `media/demo_video_link.txt` |
 | Baseline comparison exists or limitation documented | PASS | Baseline CSV and docs exist. | `evaluation/baseline_comparison.csv`, `docs/baseline_comparison.md` |
 | Phase 3 deliverables have named owners | PARTIAL | Suggested owners exist; due dates/ownership should be confirmed by team. | `docs/phase3_workplan.md`, `docs/phase3_submission_checklist.md` |
-| Final report draft covers required sections | PASS | Required sections are present. | `docs/final_report_draft.md` |
+| Final report covers required sections | PASS | PDF includes problem/user, architecture, implementation, evaluation, results, failure analysis, governance, lessons/future work, individual contributions, and screenshot appendix. | `docs/final_report/Phase_3_TraceFix_Final_Report.pdf`, `docs/final_report/report_quality_check.md` |
 | README has run/navigation instructions | PASS | CLI, evaluation, provider, frontend, artifact paths documented. | `README.md` |
 | media/demo_video_link.txt exists | PASS | File exists. | `media/demo_video_link.txt` |
 | phase3 checklist maps requirements to evidence | PASS | Checklist has status, owner, evidence path, remaining action. | `docs/phase3_submission_checklist.md` |
@@ -178,14 +179,12 @@ Manual actions required:
 
 ### Critical
 
-- Upload `media/tracefix_phase3_demo.mp4` to Canvas or paste a hosted URL in `media/demo_video_link.txt` if required by the submission form.
-- Capture and add the final named 4 to 8 report screenshot files under `docs/screenshots/`.
 - Add exported full AI response logs under `docs/ai_logs/`, or submit them through the course platform if repository upload is not appropriate.
+- Upload `media/tracefix_phase3_demo.mp4` to Canvas or paste a hosted URL in `media/demo_video_link.txt` if required by the submission form.
 
 ### High
 
-- Finalize/export `docs/final_report_draft.md` into the required final-report format.
-- Add or attach individual contribution reflections for Siru Tao, Xin Xu, Fan Yang, and Crystal Huang.
+- Add or attach separate first-person individual reflections for Siru Tao, Xin Xu, Fan Yang, and Crystal Huang if Canvas requires them outside the report.
 
 ### Medium
 
@@ -194,10 +193,10 @@ Manual actions required:
 
 ### Low
 
-- Optionally capture a fresh screenshot after the final video recording so report figures match the final demo state.
+- Optionally review `docs/final_report/report_quality_check.md` before submission.
 
 ## Final Submission Recommendation
 
-Recommendation: **Do not submit yet.**
+Recommendation: **Submit after final platform-only checks.**
 
-The repository is technically runnable and evidence-complete, and the demo MP4 is included. Submit after adding final named screenshots, AI full-response logs, final report export, and individual reflections. If Canvas requires a hosted video URL instead of file upload, upload `media/tracefix_phase3_demo.mp4` and paste the URL in `media/demo_video_link.txt`.
+The repository is technically runnable and evidence-complete: final report PDF, screenshots, evaluation artifacts, and demo MP4 are included. Before Canvas submission, attach exported AI full-response logs if required, add a hosted video URL only if Canvas does not accept MP4 upload, and add separate first-person reflections only if the course form requires them outside the report.
